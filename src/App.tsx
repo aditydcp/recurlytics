@@ -18,8 +18,10 @@ function App() {
 
         <div className="mt-8 flex space-x-4">
           <ConnectCalendarComponent />
-          <Button size="lg" variant="outline">
-            Learn More
+          <Button size="lg" variant="outline" asChild>
+            <a href="https://github.com/aditydcp/recurlytics" target="_blank" rel="noopener noreferrer">
+              Learn More
+            </a>
           </Button>
         </div>
 
