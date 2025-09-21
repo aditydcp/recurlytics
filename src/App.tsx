@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import ConnectCalendarComponent from "@/components/feature/connect-calendar";
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
       </header>
 
       <div className="mt-8 flex space-x-4">
-        <Button size="lg">Connect Google Calendar</Button>
+        <ConnectCalendarComponent />
         <Button size="lg" variant="outline">
           Learn More
         </Button>
