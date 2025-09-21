@@ -1,4 +1,5 @@
 const CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
+const BASE_URL = "https://www.googleapis.com/calendar/v3";
 const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
 export async function loadGoogleIdentityLibrary() {
@@ -23,9 +24,27 @@ export function initializeTokenClient(onSuccess: (tokenResponse: any) => void) {
 
 export async function listCalendarEvents(accessToken: string) {
   const response = await fetch(
-    "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+    `${BASE_URL}/calendars/primary/events`,
     { headers: { Authorization: `Bearer ${accessToken}` } }
   );
   const data = await response.json();
   return data;
+}
+
+export async function listCalendars(accessToken: string) {
+  const response = await fetch(`${BASE_URL}/users/me/calendarList`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!response.ok) throw new Error("Failed to fetch calendars");
+  const data = await response.json();
+  return data.items;
+}
+
+export async function listEventsFromCalendar(accessToken: string, calendarId: string) {
+  const response = await fetch(`${BASE_URL}/calendars/${encodeURIComponent(calendarId)}/events`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!response.ok) throw new Error("Failed to fetch events");
+  const data = await response.json();
+  return data.items;
 }

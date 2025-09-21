@@ -1,40 +1,52 @@
-import { useEffect, useState } from "react";
-import { loadGoogleIdentityLibrary, initializeTokenClient, listCalendarEvents } from "@/lib/googleAuth";
+import { useGoogleAuth } from "@/contexts/GoogleAuthContext";
 import { Button } from "@/components/ui/button";
 
 function ConnectCalendarComponent() {
-  const [events, setEvents] = useState<any[]>([]);
-  const [tokenClient, setTokenClient] = useState<any>(null);
+  const {
+    isLoading,
+    isConnected,
+    connect,
+    calendars,
+    selectedCalendar,
+    events,
+    selectCalendarAndFetch,
+  } = useGoogleAuth();
 
-  useEffect(() => {
-    loadGoogleIdentityLibrary().then(() => {
-      const client = initializeTokenClient((tokenResponse: any) => {
-        const token = tokenResponse.access_token;
-        if (token) {
-          listCalendarEvents(token).then((res: any) => {
-            setEvents(res.items || []);
-          });
-        }
-      });
-      setTokenClient(client);
-    });
-  }, []);
+  if (isLoading) return <p>Loading Google API…</p>;
 
-  const handleConnect = () => {
-    if (!tokenClient) return;
-    tokenClient.requestAccessToken(); // this will open the Google consent prompt
-  };
+  if (!isConnected) {
+    return <Button onClick={connect}>Connect to your calendar</Button>;
+  }
 
   return (
-    <div>
-      <Button onClick={handleConnect}>Connect Google Calendar</Button>
+    <div className="flex flex-col space-y-4">
       <div>
-        {events.map((ev) => (
-          <div key={ev.id}>
-            <strong>{ev.summary}</strong> — {ev.start?.dateTime || ev.start?.date}
-          </div>
-        ))}
+        <h2 className="font-semibold">Select a Calendar:</h2>
+        <ul className="space-y-2">
+          {calendars.map((cal: any) => (
+            <li key={cal.id}>
+              <Button
+                variant={selectedCalendar === cal.id ? "default" : "outline"}
+                onClick={() => selectCalendarAndFetch(cal.id)}
+              >
+                {cal.summary}
+              </Button>
+            </li>
+          ))}
+        </ul>
       </div>
+
+      {selectedCalendar && (
+        <div>
+          <h3 className="font-semibold mt-4">Events:</h3>
+          {events.map((ev: any) => (
+            <div key={ev.id}>
+              <strong>{ev.summary}</strong> —{" "}
+              {ev.start?.dateTime || ev.start?.date}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
