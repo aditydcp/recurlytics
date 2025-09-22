@@ -1,5 +1,6 @@
 import { useGoogleAuth } from "@/contexts/GoogleAuthContext";
 import { Button } from "@/components/ui/button";
+import EventAnalyticsComponent from "./event-analytics";
 
 function ConnectCalendarComponent() {
   const {
@@ -37,14 +38,19 @@ function ConnectCalendarComponent() {
       </div>
 
       {selectedCalendar && (
-        <div>
-          <h3 className="font-semibold mt-4">Events:</h3>
-          {events.map((ev: any) => (
-            <div key={ev.id}>
-              <strong>{ev.summary}</strong> —{" "}
-              {ev.start?.dateTime || ev.start?.date}
-            </div>
-          ))}
+        <div className="flex">
+          <div>
+            <h3 className="font-semibold mt-4">Events:</h3>
+            {events.map((ev: any) => (
+              <div key={ev.id}>
+                <strong>{ev.summary}</strong> —{" "}
+                {ev.start?.dateTime || ev.start?.date}
+              </div>
+            ))}
+          </div>
+          <div>
+            <EventAnalyticsComponent events={events} />
+          </div>
         </div>
       )}
     </div>
