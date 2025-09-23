@@ -2,6 +2,7 @@ import { useGoogleCalendar } from "@/contexts/GoogleCalendarContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { differenceInDays, addDays, format } from "date-fns";
 import { useMemo } from "react";
+import DataNumberCard from "../common/DataNumberCard";
 
 export default function EventAnalyticsComponent() {
   const {
@@ -49,17 +50,24 @@ export default function EventAnalyticsComponent() {
           <p className="text-muted-foreground">Please select a calendar</p>
         ) : avgGap ? (
           <>
-            <p>
+            {/* <p>
               <strong>Average Gap:</strong> {avgGap.toFixed(1)} days
-            </p>
-            <p>
+            </p> */}
+            <DataNumberCard
+              title="Average Gap"
+              number={avgGap.toFixed(1)}
+              unit="days"
+              description="Average number of days between recurring events."
+              tooltip="This is calculated based on the gaps between your past events."
+            />
+            {/* <p>
               <strong>Last 3 Gaps:</strong>{" "}
               {lastGaps.length > 0 ? lastGaps.join(", ") + " days" : "N/A"}
             </p>
             <p>
               <strong>Next Event Prediction:</strong>{" "}
               {format(nextPrediction!, "PPP")}
-            </p>
+            </p> */}
           </>
         ) : (
           <p className="text-muted-foreground">Not enough events to analyze yet.</p>
