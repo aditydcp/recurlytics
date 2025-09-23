@@ -1,106 +1,115 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import {
-  loadGoogleIdentityLibrary,
-  initializeTokenClient,
-  listCalendars,
-  listEventsFromCalendar,
-} from "@/lib/googleAuth";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { loadGoogleIdentityLibrary } from "@/lib/googleAuth";
 
-type GoogleAuthContextType = {
-  isLoading: boolean;
-  isConnected: boolean;
-  accessToken: string | null;
-  calendars: any[];
-  selectedCalendar: string | null;
-  events: any[];
-  connect: () => void;
-  selectCalendarAndFetch: (calendarId: string) => Promise<void>;
-};
+interface TokenCache {
+  token: string;
+  expiry: number; // ms timestamp
+}
+
+interface TokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number; // seconds until expiration
+  scope: string;
+}
+
+interface GoogleUser {
+  id: string;
+  email: string;
+  name: string;
+  picture: string;
+}
+
+interface GoogleAuthContextType {
+  isAuthenticated: boolean;
+  user: GoogleUser | null;
+  token: string | null;
+  login: () => void;
+  logout: () => void;
+}
 
 const GoogleAuthContext = createContext<GoogleAuthContextType | undefined>(
   undefined
 );
 
 const TOKEN_KEY = "recurlytics_google_token";
+const SCOPES =
+  "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.profile";
 
-export function GoogleAuthProvider({ children }: { children: React.ReactNode }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [calendars, setCalendars] = useState<any[]>([]);
-  const [selectedCalendar, setSelectedCalendar] = useState<string | null>(null);
-  const [events, setEvents] = useState<any[]>([]);
-  const [tokenClient, setTokenClient] = useState<any>(null);
+export const GoogleAuthProvider = ({ children }: { children: ReactNode }) => {
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<GoogleUser | null>(null);
+  const tokenClientRef = useRef<any>(null);
 
-  // Restore token from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem(TOKEN_KEY);
-    if (saved) {
-      const { token, expiry } = JSON.parse(saved);
-      if (Date.now() < expiry) {
-        setAccessToken(token);
-      } else {
-        localStorage.removeItem(TOKEN_KEY);
-      }
-    }
-  }, []);
-
-  // Load Google library + init token client
+  // Load Google API & setup token client
   useEffect(() => {
     loadGoogleIdentityLibrary().then(() => {
-      const client = initializeTokenClient((tokenResponse: any) => {
-        const token = tokenResponse.access_token;
-        const expiresIn = tokenResponse.expires_in || 3600; // fallback 1h
-        const expiry = Date.now() + expiresIn * 1000;
-
-        if (token) {
-          setAccessToken(token);
-          localStorage.setItem(TOKEN_KEY, JSON.stringify({ token, expiry }));
-        }
+      tokenClientRef.current = (window as any).google.accounts.oauth2.initTokenClient({
+        client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
+        scope: SCOPES,
+        callback: (res: TokenResponse) => {
+          if (res.access_token) {
+            const expiry = Date.now() + (res.expires_in || 3600) * 1000;
+            const cache: TokenCache = { token: res.access_token, expiry };
+            localStorage.setItem(TOKEN_KEY, JSON.stringify(cache));
+            setToken(res.access_token);
+            fetchUserProfile(res.access_token);
+          }
+        },
       });
-      setTokenClient(client);
-      setIsLoading(false);
+
+      // Restore saved token if still valid
+      const saved = localStorage.getItem(TOKEN_KEY);
+      if (saved) {
+        const { token, expiry } = JSON.parse(saved) as TokenCache;
+        if (Date.now() < expiry) {
+          setToken(token);
+          fetchUserProfile(token);
+        } else {
+          localStorage.removeItem(TOKEN_KEY);
+        }
+      }
     });
   }, []);
 
-  // When connected, fetch calendars
-  useEffect(() => {
-    if (!accessToken) return;
-    listCalendars(accessToken).then(setCalendars).catch(console.error);
-  }, [accessToken]);
+  const fetchUserProfile = async (accessToken: string) => {
+    const res = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const profile = await res.json();
+    setUser(profile);
+  };
 
-  const connect = () => {
-    if (tokenClient) {
-      tokenClient.requestAccessToken();
+  const login = () => {
+    if (tokenClientRef.current) {
+      tokenClientRef.current.requestAccessToken();
     }
   };
 
-  const selectCalendarAndFetch = async (calendarId: string) => {
-    if (!accessToken) return;
-    setSelectedCalendar(calendarId);
-    const evts = await listEventsFromCalendar(accessToken, calendarId);
-    setEvents(evts);
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+    localStorage.removeItem(TOKEN_KEY);
   };
 
   return (
     <GoogleAuthContext.Provider
       value={{
-        isLoading,
-        isConnected: !!accessToken,
-        accessToken,
-        calendars,
-        selectedCalendar,
-        events,
-        connect,
-        selectCalendarAndFetch,
+        isAuthenticated: !!token,
+        token,
+        user,
+        login,
+        logout,
       }}
     >
       {children}
     </GoogleAuthContext.Provider>
   );
-}
+};
 
-export function useGoogleAuth() {
+export const useGoogleAuth = () => {
   const ctx = useContext(GoogleAuthContext);
-  if (!ctx) throw new Error("useGoogleAuth must be used inside GoogleAuthProvider");
+  if (!ctx) throw new Error("useGoogleAuth must be used within GoogleAuthProvider");
   return ctx;
-}
+};
