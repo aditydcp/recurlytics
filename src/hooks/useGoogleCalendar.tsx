@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { listCalendars, listEventsFromCalendar } from "@/lib/googleAuth";
 import { useGoogleAuth } from "@/contexts/GoogleAuthContext";
+import type { GoogleCalendar } from "@/types/CalendarType";
 
 const CALENDARS_KEY = "recurlytics_google_calendars";
 const EVENTS_KEY = "recurlytics_google_events";
@@ -8,7 +9,7 @@ const SELECTED_CAL_KEY = "recurlytics_selected_calendar";
 
 export function useGoogleCalendar() {
   const { token } = useGoogleAuth();
-  const [calendars, setCalendars] = useState<any[]>(() => {
+  const [calendars, setCalendars] = useState<GoogleCalendar[]>(() => {
     const saved = localStorage.getItem(CALENDARS_KEY);
     return saved ? JSON.parse(saved) : [];
   });
@@ -37,6 +38,7 @@ export function useGoogleCalendar() {
     setLoading(true);
     setSelectedCalendar(calendarId);
     localStorage.setItem(SELECTED_CAL_KEY, calendarId);
+    if (!calendarId) return;
 
     try {
       const evts = await listEventsFromCalendar(token, calendarId);
