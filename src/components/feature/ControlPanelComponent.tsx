@@ -1,5 +1,5 @@
 import Combobox from "@/components/common/ComboBox";
-import { useGoogleCalendar } from "@/hooks/useGoogleCalendar";
+import { useGoogleCalendar } from "@/contexts/GoogleCalendarContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ControlPanelComponent() {

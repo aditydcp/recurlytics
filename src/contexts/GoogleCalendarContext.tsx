@@ -1,22 +1,37 @@
-import { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { listCalendars, listEventsFromCalendar } from "@/lib/googleAuth";
 import { useGoogleAuth } from "@/contexts/GoogleAuthContext";
-import type { GoogleCalendar } from "@/types/CalendarType";
+import type { Calendar } from "@/types/CalendarType";
+import type { Event } from "@/types/EventType";
 
 const CALENDARS_KEY = "recurlytics_google_calendars";
 const EVENTS_KEY = "recurlytics_google_events";
 const SELECTED_CAL_KEY = "recurlytics_selected_calendar";
 
-export function useGoogleCalendar() {
+type GoogleCalendarContextType = {
+  calendars: Calendar[];
+  selectedCalendar: string | null;
+  events: Event[];
+  loading: boolean;
+  selectCalendarAndFetch: (calendarId: string) => Promise<void>;
+};
+
+const GoogleCalendarContext = createContext<GoogleCalendarContextType | undefined>(
+  undefined
+);
+
+export const GoogleCalendarProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { token } = useGoogleAuth();
-  const [calendars, setCalendars] = useState<GoogleCalendar[]>(() => {
+  const [calendars, setCalendars] = useState<Calendar[]>(() => {
     const saved = localStorage.getItem(CALENDARS_KEY);
     return saved ? JSON.parse(saved) : [];
   });
   const [selectedCalendar, setSelectedCalendar] = useState<string | null>(() => {
     return localStorage.getItem(SELECTED_CAL_KEY);
   });
-  const [events, setEvents] = useState<any[]>(() => {
+  const [events, setEvents] = useState<Event[]>(() => {
     const saved = localStorage.getItem(EVENTS_KEY);
     return saved ? JSON.parse(saved) : [];
   });
@@ -51,11 +66,27 @@ export function useGoogleCalendar() {
     }
   };
 
-  return {
-    calendars,
-    selectedCalendar,
-    events,
-    loading,
-    selectCalendarAndFetch,
-  };
+  return (
+    <GoogleCalendarContext.Provider
+      value={{
+        calendars,
+        selectedCalendar,
+        events,
+        loading,
+        selectCalendarAndFetch,
+      }}
+    >
+      {children}
+    </GoogleCalendarContext.Provider>
+  );
+};
+
+export function useGoogleCalendar() {
+  const context = useContext(GoogleCalendarContext);
+  if (!context) {
+    throw new Error(
+      "useGoogleCalendar must be used within a GoogleCalendarProvider"
+    );
+  }
+  return context;
 }

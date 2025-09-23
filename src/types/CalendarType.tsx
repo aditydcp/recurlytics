@@ -1,4 +1,4 @@
-export interface GoogleCalendar {
+export interface Calendar {
   id: string;
   summary: string;
   timeZone: string;

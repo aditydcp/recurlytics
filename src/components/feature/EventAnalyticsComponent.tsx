@@ -1,12 +1,15 @@
-import { useMemo } from "react";
+import { useGoogleCalendar } from "@/contexts/GoogleCalendarContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { differenceInDays, parseISO, addDays, format } from "date-fns";
+import { differenceInDays, addDays, format } from "date-fns";
+import { useMemo } from "react";
 
-interface EventAnalyticsProps {
-  events: { id: string; summary: string; start: { dateTime?: string; date?: string } }[];
-}
+export default function EventAnalyticsComponent() {
+  const {
+    selectedCalendar,
+    events,
+    loading,
+  } = useGoogleCalendar();
 
-export default function EventAnalyticsComponent({ events }: EventAnalyticsProps) {
   const { avgGap, lastGaps, nextPrediction } = useMemo(() => {
     if (!events || events.length < 2) {
       return { avgGap: null, lastGaps: [], nextPrediction: null };
@@ -35,12 +38,16 @@ export default function EventAnalyticsComponent({ events }: EventAnalyticsProps)
   }, [events]);
 
   return (
-    <Card className="w-full max-w-md mt-8">
+    <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>📊 Event Analytics</CardTitle>
+        <CardTitle>Statistics</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {avgGap ? (
+      <CardContent className="flex">
+        {loading ? (
+          <p className="text-muted-foreground">Loading events...</p>
+        ) : !selectedCalendar ? (
+          <p className="text-muted-foreground">Please select a calendar</p>
+        ) : avgGap ? (
           <>
             <p>
               <strong>Average Gap:</strong> {avgGap.toFixed(1)} days
@@ -59,5 +66,5 @@ export default function EventAnalyticsComponent({ events }: EventAnalyticsProps)
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

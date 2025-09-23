@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useGoogleAuth } from "@/contexts/GoogleAuthContext";
-import EventAnalyticsComponent from "@/components/feature/event-analytics";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getNameInitials } from "@/lib/nameInitials";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { LogOut, Info, User } from "lucide-react";
 import ControlPanelComponent from "@/components/feature/ControlPanelComponent";
+import EventAnalyticsComponent from "@/components/feature/EventAnalyticsComponent";
 
 export default function DashboardPage() {
   const { user, logout } = useGoogleAuth();
@@ -61,9 +61,9 @@ export default function DashboardPage() {
         </div>
       </header>
       <div className="flex flex-col items-center mt-6 w-full h-full">
-        <main className="flex flex-col items-center space-y-6">
+        <main className="flex flex-col items-center space-y-2">
           <ControlPanelComponent />
-          {/* <EventAnalyticsComponent /> */}
+          <EventAnalyticsComponent />
         </main>
       </div>
     </>
