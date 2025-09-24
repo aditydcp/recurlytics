@@ -12,7 +12,7 @@ function App() {
   return (
     <GoogleAuthProvider>
       <GoogleCalendarProvider>
-        <div className="min-h-screen bg-background text-foreground px-4 flex flex-col items-center justify-center">
+        <div className="min-h-screen bg-background text-foreground px-8 flex flex-col items-center justify-center">
           <AppContent />
           <footer className="my-8 text-sm text-muted-foreground">
             Built with ❤️ using React, TypeScript & shadcn/ui

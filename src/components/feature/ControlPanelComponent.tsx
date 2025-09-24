@@ -1,4 +1,4 @@
-import Combobox from "@/components/common/ComboBox";
+import Combobox from "@/components/common/Combobox";
 import { useGoogleCalendar } from "@/contexts/GoogleCalendarContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -11,7 +11,7 @@ export default function ControlPanelComponent() {
   } = useGoogleCalendar();
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full">
       <CardHeader className="pb-4">
         <CardTitle>Control Panel</CardTitle>
       </CardHeader>
