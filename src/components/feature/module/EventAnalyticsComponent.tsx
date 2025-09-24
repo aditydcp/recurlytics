@@ -33,7 +33,7 @@ export default function EventAnalyticsComponent() {
     }
 
     const avgGap = gaps.reduce((a, b) => a + b, 0) / gaps.length;
-    const lastGaps = gaps.slice(-3);
+    const lastGaps = gaps.slice(-3).reverse();
     const lastEventDate = new Date(sorted[sorted.length - 1].start.dateTime || sorted[sorted.length - 1].start.date || "");
     const nextPrediction = addDays(lastEventDate, Math.round(avgGap));
 
