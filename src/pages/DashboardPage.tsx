@@ -4,8 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getNameInitials } from "@/lib/nameInitials";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { LogOut, Info, User } from "lucide-react";
-import ControlPanelComponent from "@/components/feature/ControlPanelComponent";
-import EventAnalyticsComponent from "@/components/feature/EventAnalyticsComponent";
+import ControlPanelComponent from "@/components/feature/module/ControlPanelComponent";
+import EventAnalyticsComponent from "@/components/feature/module/EventAnalyticsComponent";
 
 export default function DashboardPage() {
   const { user, logout } = useGoogleAuth();

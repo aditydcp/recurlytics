@@ -3,9 +3,8 @@ import { differenceInDays, addDays, format } from "date-fns";
 import { useMemo } from "react";
 import DataDisplayCard from "@/components/common/DataDisplayCard";
 import DataNumberDisplay from "@/components/feature/unit/DataNumberDisplay";
-import DataMultiPointDisplay from "./unit/DataMultiPointDisplay";
+import DataMultiPointDisplay from "../unit/DataMultiPointDisplay";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 
 export default function EventAnalyticsComponent() {
   const {
