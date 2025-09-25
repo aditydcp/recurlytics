@@ -35,7 +35,7 @@ const GoogleAuthContext = createContext<GoogleAuthContextType | undefined>(
 
 const TOKEN_KEY = "recurlytics_google_token";
 const SCOPES =
-  "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.profile";
+  "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.profile openid email profile";
 
 export const GoogleAuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -74,7 +74,7 @@ export const GoogleAuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const fetchUserProfile = async (accessToken: string) => {
-    const res = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+    const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const profile = await res.json();
