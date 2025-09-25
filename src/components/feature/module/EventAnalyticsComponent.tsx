@@ -5,6 +5,8 @@ import DataDisplayCard from "@/components/common/DataDisplayCard";
 import DataNumberDisplay from "@/components/feature/unit/DataNumberDisplay";
 import DataMultiPointDisplay from "../unit/DataMultiPointDisplay";
 import { Label } from "@/components/ui/label";
+import { EventColumns } from "@/types/EventType";
+import { DataTable } from "@/components/common/DataTable";
 
 export default function EventAnalyticsComponent() {
   const {
@@ -43,50 +45,54 @@ export default function EventAnalyticsComponent() {
   return (
     <div className="w-full flex flex-col py-2">
       <Label className="text-xl font-semibold mb-4 ml-4">Event Analytics</Label>
-      <div className="w-full flex flex-col gap-4">
-        {loading ? (
-          <p className="text-muted-foreground">Loading events...</p>
-        ) : !selectedCalendar ? (
-          <p className="text-muted-foreground">Please select a calendar</p>
-        ) : avgGap ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-            <DataDisplayCard
-              title="Average Gap"
-              tooltip="This is calculated based on the gaps between your past events."
-            >
-              <DataNumberDisplay
-                number={avgGap.toFixed(1)}
-                unit="days"
-                description="Average number of days between recurring events."
-              />
-            </DataDisplayCard>
-            <DataDisplayCard
-              title="Recent Gaps"
-              tooltip="The gaps (in days) between your last few events."
-            >
-              <DataMultiPointDisplay
-                dataPoints={lastGaps.map((gap) => {
-                  if (gap) return { value: gap.toString(), unit: "days" };
-                  return { value: "N/A" };
-                })}
-                description="Gaps (in days) between your last few events."
-                showIndex={true}
-                indexType="text"
-              />
-            </DataDisplayCard>
-            <DataDisplayCard
-              title="Next Event"
-              tooltip="Based on your average event gap, this is when your next event is likely to occur."
-            >
-              <DataNumberDisplay
-                number={format(nextPrediction!, "PPP")}
-              />
-            </DataDisplayCard>
-          </div>
-        ) : (
-          <p className="text-muted-foreground">Not enough events to analyze yet.</p>
-        )}
-      </div>
+      {loading ? (
+        <p className="mx-6 my-4 text-sm text-muted-foreground">Loading events...</p>
+      ) : !selectedCalendar ? (
+        <p className="mx-6 my-4 text-sm text-muted-foreground">Please select a calendar</p>
+      ) : avgGap ? (
+        <div className="grid grid-cols-3 gap-4 w-full">
+          <DataTable
+            columns={EventColumns}
+            data={events}
+            defaultSortingState={[{ id: 'start', desc: true }]}
+          />
+          <DataDisplayCard
+            title="Average Gap"
+            tooltip="This is calculated based on the gaps between your past events."
+          >
+            <DataNumberDisplay
+              number={avgGap.toFixed(1)}
+              unit="days"
+              description="Average number of days between recurring events."
+            />
+          </DataDisplayCard>
+          <DataDisplayCard
+            title="Recent Gaps"
+            tooltip="The gaps (in days) between your last few events."
+          >
+            <DataMultiPointDisplay
+              dataPoints={lastGaps.map((gap) => {
+                if (gap) return { value: gap.toString(), unit: "days" };
+                return { value: "N/A" };
+              })}
+              description="Gaps (in days) between your last few events."
+              showIndex={true}
+              indexType="text"
+            />
+          </DataDisplayCard>
+          <DataDisplayCard
+            title="Next Event"
+            tooltip="Based on your average event gap, this is when your next event is likely to occur."
+          >
+            <DataNumberDisplay
+              number={format(nextPrediction!, "PPP")}
+              numberTextSize="4xl"
+            />
+          </DataDisplayCard>
+        </div>
+      ) : (
+        <p className="text-muted-foreground">Not enough events to analyze yet.</p>
+      )}
     </div>
   )
 }
