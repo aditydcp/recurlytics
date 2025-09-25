@@ -91,7 +91,7 @@ export default function EventAnalyticsComponent() {
           </DataDisplayCard>
         </div>
       ) : (
-        <p className="text-muted-foreground">Not enough events to analyze yet.</p>
+        <p className="mx-6 my-4 text-sm text-muted-foreground">Not enough events to analyze yet.</p>
       )}
     </div>
   )

@@ -12,7 +12,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 shadow-sm flex w-full justify-between items-center p-4">
+      <header className="sticky top-0 z-50 bg-white shadow-sm flex w-full justify-between items-center p-4">
         <h2 className="font-semibold text-2xl text-primary cursor-default">Recurlytics</h2>
         <div className="flex items-center space-x-4">
           <DropdownMenu>
@@ -61,7 +61,7 @@ export default function DashboardPage() {
         </div>
       </header>
       <div className="flex flex-col items-center mt-6 w-full h-full">
-        <main className="flex flex-col items-center space-y-2">
+        <main className="flex flex-col items-center space-y-2 w-full">
           <ControlPanelComponent />
           <EventAnalyticsComponent />
         </main>
