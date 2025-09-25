@@ -1,34 +1,24 @@
-import { Button } from "@/components/ui/button";
-import ConnectCalendarComponent from "@/components/feature/connect-calendar";
-import { GoogleAuthProvider } from "./contexts/GoogleAuthContext";
+import { GoogleAuthProvider, useGoogleAuth } from "@/contexts/GoogleAuthContext";
+import LandingPage from "@/pages/LandingPage";
+import DashboardPage from "@/pages/DashboardPage";
+import { GoogleCalendarProvider } from "./contexts/GoogleCalendarContext";
+
+function AppContent() {
+  const { isAuthenticated } = useGoogleAuth();
+  return isAuthenticated ? <DashboardPage /> : <LandingPage />;
+}
 
 function App() {
   return (
     <GoogleAuthProvider>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground px-4">
-        <header className="flex flex-col items-center space-y-4 text-center">
-          <h1 className="text-4xl font-bold tracking-tight">
-            📅 Welcome to <span className="text-primary">Recurlytics</span>
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-md">
-            Analyze your recurring Google Calendar events.
-            Discover patterns, track gaps between events, and predict what’s next.
-          </p>
-        </header>
-
-        <div className="mt-8 flex space-x-4">
-          <ConnectCalendarComponent />
-          <Button size="lg" variant="outline" asChild>
-            <a href="https://github.com/aditydcp/recurlytics" target="_blank" rel="noopener noreferrer">
-              Learn More
-            </a>
-          </Button>
+      <GoogleCalendarProvider>
+        <div className="min-h-screen bg-background text-foreground px-8 flex flex-col items-center justify-center">
+          <AppContent />
+          <footer className="my-8 text-sm text-muted-foreground">
+            Built with ❤️ using React, TypeScript & shadcn/ui
+          </footer>
         </div>
-
-        <footer className="absolute bottom-6 text-sm text-muted-foreground">
-          Built with ❤️ using React, TypeScript & shadcn/ui
-        </footer>
-      </div>
+      </GoogleCalendarProvider>
     </GoogleAuthProvider>
   );
 }
