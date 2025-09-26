@@ -1,5 +1,7 @@
 # 📅 Recurlytics
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9c8d2cf9-cd37-4441-96cb-498e0d38a35a/deploy-status)](https://app.netlify.com/projects/recurlytics/deploys)
+
 Recurlytics is a simple web app that connects with **Google Calendar** and provides analytics on recurring events.  
 It helps you discover patterns, track gaps between events, and predict what’s next.
 
