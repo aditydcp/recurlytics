@@ -1,8 +1,10 @@
+import { TextSizeMap, type TextSizes } from "@/types/CommonType";
+
 interface DataNumberDisplayProps {
   number: string;
   unit?: string;
   description?: string;
-  numberTextSize?: "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl";
+  numberTextSize?: typeof TextSizes[number];
 }
 
 export default function DataNumberDisplay({
@@ -13,7 +15,7 @@ export default function DataNumberDisplay({
 }: DataNumberDisplayProps) {
   return (
     <div className="flex flex-col">
-      <div className={`text-${numberTextSize} py-4 font-semibold`}>
+      <div className={`${TextSizeMap[numberTextSize]} py-4 font-semibold`}>
         {number}
         {unit && (
           <span className="text-sm font-normal ml-1.5">{unit}</span>
