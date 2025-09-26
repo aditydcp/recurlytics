@@ -52,7 +52,7 @@ export default function AppContextMenuComponent() {
           </Button>
         </DropdownMenuItem>
         <DropdownMenuLabel className="px-2 py-1.5 text-xs text-end font-normal text-muted-foreground">
-          v{process.env.npm_package_version || import.meta.env.VITE_APP_VERSION || "0.0.1-alpha"}
+          v{import.meta.env.VITE_APP_VERSION || "0.0.1-alpha"}
         </DropdownMenuLabel>
       </DropdownMenuContent>
     </DropdownMenu>

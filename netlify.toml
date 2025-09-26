@@ -1,0 +1,3 @@
+[build]
+  command = "VITE_APP_VERSION=$(node -p \"require('./package.json').version\") npm run build"
+  publish = "dist"
