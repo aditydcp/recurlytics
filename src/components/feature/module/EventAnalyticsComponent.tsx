@@ -7,6 +7,7 @@ import DataMultiPointDisplay from "../unit/DataMultiPointDisplay";
 import { Label } from "@/components/ui/label";
 import { EventColumns } from "@/types/EventType";
 import { DataTable } from "@/components/common/DataTable";
+import { CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
 
 export default function EventAnalyticsComponent() {
   const {
@@ -84,10 +85,20 @@ export default function EventAnalyticsComponent() {
             title="Next Event"
             tooltip="Based on your average event gap, this is when your next event is likely to occur."
           >
-            <DataNumberDisplay
-              number={format(nextPrediction!, "PPP")}
-              numberTextSize="4xl"
-            />
+            <div className="flex flex-col gap-1">
+              <DataNumberDisplay
+                number={format(nextPrediction!, "PPP")}
+                numberTextSize="4xl"
+              />
+              <CalendarSingleReadOnly
+                defaultValue={nextPrediction!}
+                defaultMonth={nextPrediction!}
+                className="w-full rounded-md border border-border"
+                disableNavigation={true}
+                hideNavigation={true}
+                weekStartsOn={1}
+              />
+            </div>
           </DataDisplayCard>
         </div>
       ) : (
