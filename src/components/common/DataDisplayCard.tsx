@@ -24,7 +24,7 @@ export default function DataDisplayCard({
           {tooltip && (
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger className="hover:bg-accent rounded-full">
                   {" "}
                   <Info className="opacity-50 w-4 h-4 hover:text-primary" />
                 </TooltipTrigger>
