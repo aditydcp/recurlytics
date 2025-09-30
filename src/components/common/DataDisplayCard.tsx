@@ -2,6 +2,7 @@ import { Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { InfoTooltip } from "./InfoTooltip";
 
 interface DataDisplayCardProps {
   children: React.ReactNode;
@@ -22,17 +23,7 @@ export default function DataDisplayCard({
         <CardTitle className="flex items-center space-x-3">
           <Label className="text-md font-normal">{title}</Label>
           {tooltip && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger className="hover:bg-accent rounded-full">
-                  {" "}
-                  <Info className="opacity-50 w-4 h-4 hover:text-primary" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{tooltip}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <InfoTooltip>{tooltip}</InfoTooltip>
           )}
         </CardTitle>
       </CardHeader>
