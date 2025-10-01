@@ -66,65 +66,72 @@ export default function EventAnalyticsComponent() {
       ) : !selectedCalendar ? (
         <p className="mx-6 my-4 text-sm text-muted-foreground">Please select a calendar</p>
       ) : avgGap ? (
-        <div className="grid grid-cols-3 gap-4 w-full">
-          <DataTable
-            columns={EventColumns}
-            data={events}
-            defaultSortingState={[{ id: 'start', desc: true }]}
-          />
-          <DataDisplayCard
-            title="Average Gap"
-            tooltip="This is calculated based on the gaps between your past events."
-          >
-            <DataNumberDisplay
-              number={avgGap.toFixed(1)}
-              unit="days"
-              description="Average number of days between recurring events."
+        <div className="grid md:grid-cols-3 gap-4 w-full">
+          <div className="grid gap-4 w-full order-3 md:order-1">
+            <DataTable
+              className="h-fit"
+              columns={EventColumns}
+              data={events}
+              defaultSortingState={[{ id: 'start', desc: true }]}
             />
-          </DataDisplayCard>
-          <DataDisplayCard
-            title="Recent Gaps"
-            tooltip="The gaps (in days) between your last few events."
-          >
-            <DataMultiPointDisplay
-              dataPoints={lastGaps.map((gap) => {
-                if (gap) return { 
-                  type: "dateGap",
-                  from: gap.from,
-                  to: gap.to,
-                  gap: gap.gap,
-                  unit: "days",
-                  showCalendar: true
-                } as DataPoint;
-                return { 
-                  type: "value",
-                  value: "N/A" 
-                };
-              })}
-              description="Gaps (in days) between your last few events."
-              showIndex={true}
-              indexType="text"
-            />
-          </DataDisplayCard>
-          <DataDisplayCard
-            title="Next Event"
-            tooltip="Based on your average event gap, this is when your next event is likely to occur."
-          >
-            <div className="flex flex-col gap-1">
+          </div>
+          <div className="grid gap-4 w-full order-2 md:order-2">
+            <DataDisplayCard
+              title="Average Gap"
+              tooltip="This is calculated based on the gaps between your past events."
+            >
               <DataNumberDisplay
-                number={format(nextPrediction!, "PPP")}
-                numberTextSize="4xl"
+                number={avgGap.toFixed(1)}
+                unit="days"
+                description="Average number of days between recurring events."
               />
-              <CalendarSingleReadOnly
-                defaultValue={nextPrediction!}
-                defaultMonth={nextPrediction!}
-                className="w-full rounded-md border border-border"
-                disableNavigation={true}
-                hideNavigation={true}
-                weekStartsOn={1}
+            </DataDisplayCard>
+            <DataDisplayCard
+              title="Recent Gaps"
+              tooltip="The gaps (in days) between your last few events."
+            >
+              <DataMultiPointDisplay
+                dataPoints={lastGaps.map((gap) => {
+                  if (gap) return {
+                    type: "dateGap",
+                    from: gap.from,
+                    to: gap.to,
+                    gap: gap.gap,
+                    unit: "days",
+                    showCalendar: true
+                  } as DataPoint;
+                  return {
+                    type: "value",
+                    value: "N/A"
+                  };
+                })}
+                description="Gaps (in days) between your last few events."
+                showIndex={true}
+                indexType="text"
               />
-            </div>
-          </DataDisplayCard>
+            </DataDisplayCard>
+          </div>
+          <div className="grid gap-4 w-full order-1 md:order-3">
+            <DataDisplayCard
+              title="Next Event"
+              tooltip="Based on your average event gap, this is when your next event is likely to occur."
+            >
+              <div className="flex flex-col gap-1">
+                <DataNumberDisplay
+                  number={format(nextPrediction!, "PPP")}
+                  numberTextSize="4xl"
+                />
+                <CalendarSingleReadOnly
+                  defaultValue={nextPrediction!}
+                  defaultMonth={nextPrediction!}
+                  className="w-full rounded-md border border-border"
+                  disableNavigation={true}
+                  hideNavigation={true}
+                  weekStartsOn={1}
+                />
+              </div>
+            </DataDisplayCard>
+          </div>
         </div>
       ) : (
         <p className="mx-6 my-4 text-sm text-muted-foreground">Not enough events to analyze yet.</p>

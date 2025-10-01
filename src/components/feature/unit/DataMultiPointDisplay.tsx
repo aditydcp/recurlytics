@@ -72,7 +72,7 @@ export default function DataMultiPointDisplay({
                   </div>
                 </td>
                 {(point.type === "dateGap" || point.type === "date") && point.showCalendar && (
-                  <td className="align-middle">
+                  <td className="align-middle hidden md:table-cell">
                     <HoverCard>
                       <HoverCardTrigger className="lg:ml-4 my-auto flex">
                         <Info
@@ -82,7 +82,7 @@ export default function DataMultiPointDisplay({
                       <HoverCardContent
                         sideOffset={10}
                         side="bottom"
-                        align="start"
+                        align="center"
                       >
                         <div className="flex flex-col gap-2">
                           <div className="flex flex-col mx-1.5">

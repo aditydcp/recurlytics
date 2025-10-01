@@ -17,7 +17,7 @@ export function InfoTooltip({
       <TooltipTrigger asChild>
         <Info
           className={cn(
-            "opacity-50 w-4 h-4 hover:text-primary hover:bg-accent rounded-full cursor-pointer",
+            "opacity-50 w-4 h-4 hover:text-primary hover:bg-accent rounded-full cursor-pointer hidden md:block",
             className
           )}
         />
