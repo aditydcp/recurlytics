@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0](https://github.com/aditydcp/recurlytics/compare/v1.0.1...v1.1.0) (2025-10-01)
+
+
+### Features
+
+* **calendar:** add gaps calendar view ([ecb2a6c](https://github.com/aditydcp/recurlytics/commit/ecb2a6c19537242cda88cb99ae7a118bc94e4ac3))
+* **calendar:** add prediction calendar view ([f8ed994](https://github.com/aditydcp/recurlytics/commit/f8ed994c2aff890a3a359c4747eb3e4243dd1fc0))
+* **mobile-view:** adjust mobile view ([17142e0](https://github.com/aditydcp/recurlytics/commit/17142e04d02291b040453477e59aeb29fe4d6c4f))
+* theme toggle ([076da36](https://github.com/aditydcp/recurlytics/commit/076da36f220e198237d46e1d61dd8260905d75e4))
+
+
+### Bug Fixes
+
+* data number improper size ([df01916](https://github.com/aditydcp/recurlytics/commit/df01916aa1da9f69459555bd494751193f837736))
+
 ## [1.0.1](https://github.com/aditydcp/recurlytics/compare/v1.0.0...v1.0.1) (2025-09-26)
 
 
