@@ -34,7 +34,7 @@ export const EventColumns: ColumnDef<Event>[] = [
           className="text-foreground hover:bg-input hover:border-primary"
           size="sm"
         >
-          Date
+          Records Date
           <ArrowUpDown />
         </Button>
       )
@@ -44,7 +44,7 @@ export const EventColumns: ColumnDef<Event>[] = [
       const displayData = !timestamp
         ? "N/A"
         : format(new Date(timestamp), "dd MMM yyyy");
-      return <Label className="px-2">{displayData}</Label>;
+      return <Label className="px-3">{displayData}</Label>;
     },
     enableSorting: true,
     sortDescFirst: false,

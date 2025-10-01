@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -26,6 +27,7 @@ interface DataTableProps<TData, TValue> {
   noDataText?: string
   defaultSortingState?: SortingState
   defaultPaginationState?: PaginationState
+  className?: string
 }
 
 export function DataTable<TData, TValue>({
@@ -34,6 +36,7 @@ export function DataTable<TData, TValue>({
   noDataText = "No records.",
   defaultSortingState = [],
   defaultPaginationState = { pageIndex: 0, pageSize: 5 },
+  className,
 }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState<PaginationState>(defaultPaginationState)
   const [sorting, setSorting] = useState<SortingState>(defaultSortingState)
@@ -53,14 +56,19 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-card">
+    <div
+      className={cn(
+        "overflow-hidden rounded-md border border-border bg-card",
+        className
+      )}
+    >
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="py-1.5">
                     {header.isPlaceholder
                       ? null
                       : flexRender(

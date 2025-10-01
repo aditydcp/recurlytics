@@ -1,8 +1,8 @@
-interface DataPoint {
-  value: string;
-  unit?: string;
-  description?: string;
-}
+import { CalendarRangeReadOnly, CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import type { DataPoint } from "@/types/DataDisplayType";
+import { format } from "date-fns";
+import { Info } from "lucide-react";
 
 interface DataMultiPointDisplayProps {
   dataPoints: DataPoint[];
@@ -25,33 +25,109 @@ export default function DataMultiPointDisplay({
 
   return (
     <div className="flex flex-col">
-      <table className="w-full border-separate border-spacing-y-3 border-spacing-x-1 my-1">
+      <table className="w-full border-separate border-spacing-y-3 border-spacing-x-1 lg:border-spacing-x-2 my-1">
         <colgroup>
           {/* First column: fit content but capped at 1/3 */}
           <col className="w-[1%] max-w-[33%]" />
-          {/* Second column: takes the remaining space (at least 2/3) */}
+          {/* Second column: takes the remaining space (at least 1/3) */}
+          <col className="w-[99%] min-w-[33%]" />
+          {/* Third column: takes the remaining space*/}
           <col className="w-[99%]" />
         </colgroup>
         <tbody>
-          {dataPoints.map((point, index) => (
-            <tr key={index} className="gap-2">
-              {showIndex && (
-                <td className="align-middle pr-3 text-xs font-normal text-muted-foreground">
-                  {indices[index]}
+          {dataPoints.map((point, index) => {
+            let value: string | number | undefined;
+            let textSize = "text-3xl";
+
+            switch (point.type) {
+              case "value":
+                value = point.value;
+                break;
+              case "dateGap":
+                value = point.gap;
+                break;
+              case "date":
+                value = format(point.date!, "PPP");
+                textSize = "text-2xl";
+                break;
+              default:
+                value = undefined;
+            }
+
+            return (
+              <tr key={index}>
+                {showIndex && (
+                  <td className="align-middle pr-3 text-xs font-normal text-muted-foreground">
+                    {indices[index]}
+                  </td>
+                )}
+                <td className="align-middle">
+                  <div className="flex items-baseline min-w-0 lg:ml-1 gap-x-2">
+                    <span className={`${textSize} font-semibold`}>
+                      {value || "N/A"}
+                    </span>
+                    {point.unit && value && (
+                      <span className="text-sm font-normal">{point.unit}</span>
+                    )}
+                  </div>
                 </td>
-              )}
-              <td className="align-middle">
-                <div className="flex items-baseline min-w-0">
-                  <span className="text-3xl font-semibold">
-                    {point.value || "N/A"}
-                  </span>
-                  {point.unit && point.value && (
-                    <span className="text-sm font-normal ml-1.5">{point.unit}</span>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
+                {(point.type === "dateGap" || point.type === "date") && point.showCalendar && (
+                  <td className="align-middle hidden md:table-cell">
+                    <HoverCard>
+                      <HoverCardTrigger className="lg:ml-4 my-auto flex">
+                        <Info
+                          className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent rounded-full cursor-pointer"}
+                        />
+                      </HoverCardTrigger>
+                      <HoverCardContent
+                        sideOffset={10}
+                        side="bottom"
+                        align="center"
+                      >
+                        <div className="flex flex-col gap-2">
+                          <div className="flex flex-col mx-1.5">
+                            {showIndex && <span className="text-sm font-normal text-muted-foreground">{indices[index]}</span>}
+                            {point.type === "dateGap" && (
+                              <span className={`text-xl font-semibold`}>
+                                {point.from ? format(point.from, "PPP") : "N/A"} - <br />
+                                {point.to ? format(point.to, "PPP") : "N/A"}
+                              </span>
+                            )}
+                            {point.type === "date" && (
+                              <span className={`text-xl font-semibold`}>
+                                {value || "N/A"}
+                              </span>
+                            )}
+                          </div>
+                          {point.type === "dateGap" && (
+                            <CalendarRangeReadOnly
+                              defaultValue={{ from: point.from, to: point.to }}
+                              defaultMonth={point.from}
+                              className="w-full min-w-[24rem] rounded-md border border-border bg-card"
+                              disableNavigation={true}
+                              hideNavigation={true}
+                              weekStartsOn={1}
+                              numberOfMonths={2}
+                            />
+                          )}
+                          {point.type === "date" && (
+                            <CalendarSingleReadOnly
+                              defaultValue={point.date!}
+                              defaultMonth={point.date!}
+                              className="w-full rounded-md border border-border"
+                              disableNavigation={true}
+                              hideNavigation={true}
+                              weekStartsOn={1}
+                            />
+                          )}
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
+                  </td>
+                )}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       <div className="text-sm text-muted-foreground">
