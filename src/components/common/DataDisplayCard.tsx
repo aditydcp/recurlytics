@@ -1,7 +1,5 @@
-import { Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { InfoTooltip } from "./InfoTooltip";
 
 interface DataDisplayCardProps {
