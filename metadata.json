@@ -1,0 +1,10 @@
+{
+  "name":"Recurlytics",
+  "status_working": "Active",
+  "author": "aditydcp",
+  "deployment": {
+    "status": "Deployed",
+    "host": "Netlify",
+    "url": "https://recurlytics.netlify.app/"
+  }
+}
