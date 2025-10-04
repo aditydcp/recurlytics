@@ -19,13 +19,13 @@ export function PreferencesMenu({ }) {
             value={preferences.themeMode}
             onValueChange={(value: ThemeMode) => setPreferences({ themeMode: value })}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[6rem] md:w-[8rem]">
               <SelectValue placeholder="Light/Dark Mode" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="light">Light</SelectItem>
               <SelectItem value="dark">Dark</SelectItem>
-              <SelectItem value="system">Use system's default</SelectItem>
+              <SelectItem value="system">System</SelectItem>
             </SelectContent>
           </Select>
         </div>
