@@ -2,6 +2,8 @@ on:
   push:
     branches:
       - master
+  release:
+    types: [published]
 
 permissions:
   contents: write
@@ -16,10 +18,28 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         with:
-          # this assumes that you have created a personal access token
-          # (PAT) and configured it as a GitHub action secret named
-          # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
           token: ${{ secrets.MY_RELEASE_PLEASE_TOKEN }}
-          # this is a built-in strategy in release-please, see "Action Inputs"
-          # for more options
           release-type: node
+
+  merge-to-prod:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: github.event_name == 'release' && github.event.action == 'published'
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "DET-BOT"
+          git config user.email "det-bot@users.noreply.github.com"
+
+      - name: Merge master into prod
+        run: |
+          git fetch origin prod
+          git checkout prod
+          git merge origin/master --no-edit
+          git push origin prod
