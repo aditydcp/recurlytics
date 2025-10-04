@@ -1,13 +1,24 @@
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getNameInitials } from "@/lib/nameInitials";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Info, LogOut, User } from "lucide-react";
+import { Bolt, Info, LogOut, User } from "lucide-react";
 import { useGoogleAuth } from "@/contexts/GoogleAuthContext";
+import { usePopup } from "@/contexts/PopupContext";
+import { PreferencesMenu } from "@/components/feature/module/PreferencesMenu";
 
 export default function AppContextMenuComponent() {
   const { user, logout } = useGoogleAuth();
-  
+  const { open, close } = usePopup();
+
+  const handleMoreInfo = () => {
+    window.open(
+      "https://github.com/aditydcp/recurlytics?tab=readme-ov-file#readme",
+      "_blank",
+      "noopener noreferrer"
+    )
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,24 +38,52 @@ export default function AppContextMenuComponent() {
           <Button
             size="sm"
             variant="outline"
+            onClick={() => open({
+              title: "Settings",
+              content: (<PreferencesMenu />),
+            })}
             className="w-full justify-start px-4"
-            asChild
           >
-            <a
-              href="https://github.com/aditydcp/recurlytics?tab=readme-ov-file#readme"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Info className="mr-3 h-4 w-4" />
-              More Info
-            </a>
+            <Bolt className="mr-3 h-4 w-4" />
+            Settings
+          </Button>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator className="my-0 mb-2 w-[95%] mx-auto" />
+        <DropdownMenuItem asChild>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleMoreInfo}
+            className="w-full justify-start px-4"
+          >
+            <Info className="mr-3 h-4 w-4" />
+            More Info
           </Button>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Button
             size="sm"
             variant="outline"
-            onClick={logout}
+            onClick={() => open({
+              title: "Are you sure you want to logout?",
+              description: "Logging out of current session",
+              content: <>We will miss you 🥺</>,
+              footer: (
+                <>
+                  <Button variant="outline" onClick={() => close()}>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      close();
+                      logout();
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </>
+              ),
+            })}
             className="w-full justify-start px-4"
           >
             <LogOut className="mr-3 h-4 w-4" />

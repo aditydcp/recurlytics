@@ -1,7 +1,6 @@
 import ControlPanelComponent from "@/components/feature/module/ControlPanelComponent";
 import EventAnalyticsComponent from "@/components/feature/module/EventAnalyticsComponent";
 import AppContextMenuComponent from "@/components/feature/module/AppContextMenuComponent";
-import { ThemeToggleButton } from "@/components/feature/unit/ThemeToggleButton";
 
 export default function DashboardPage() {
   return (
@@ -9,7 +8,6 @@ export default function DashboardPage() {
       <header className="sticky top-0 z-50 bg-background shadow-sm flex w-full justify-between items-center p-4">
         <h2 className="font-semibold text-2xl text-primary cursor-default">Recurlytics</h2>
         <div className="flex items-center space-x-4">
-          <ThemeToggleButton />
           <AppContextMenuComponent />
         </div>
       </header>
