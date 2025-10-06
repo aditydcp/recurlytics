@@ -4,7 +4,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import { GoogleCalendarProvider } from "@/contexts/GoogleCalendarContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PopupProvider } from "@/contexts/PopupContext";
-import { PreferencesProvider } from "./contexts/preferences/PreferencesContext";
+import { PreferencesProvider } from "@/contexts/preferences/PreferencesContext";
 
 function AppContent() {
   const { isAuthenticated } = useGoogleAuth();

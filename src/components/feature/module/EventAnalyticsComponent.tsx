@@ -3,14 +3,13 @@ import { differenceInDays, addDays, format } from "date-fns";
 import { useMemo } from "react";
 import DataDisplayCard from "@/components/common/DataDisplayCard";
 import DataNumberDisplay from "@/components/feature/unit/DataNumberDisplay";
-import DataMultiPointDisplay from "../unit/DataMultiPointDisplay";
+import DataMultiPointDisplay from "@/components/feature/unit/DataMultiPointDisplay";
 import { Label } from "@/components/ui/label";
 import { EventColumns } from "@/types/EventType";
 import { DataTable } from "@/components/common/DataTable";
 import { CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
 import type { DataPoint } from "@/types/DataDisplayType";
-
-type Gap = { from: Date; to: Date; gap: number };
+import type { Gap } from "@/types/CalendarType";
 
 export default function EventAnalyticsComponent() {
   const {
