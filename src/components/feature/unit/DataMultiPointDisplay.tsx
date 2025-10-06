@@ -1,5 +1,6 @@
 import { CalendarRangeReadOnly, CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { generateIndices } from "@/lib/orderedListPrefixes";
 import type { DataPoint } from "@/types/DataDisplayType";
 import { format } from "date-fns";
 import { Info } from "lucide-react";
@@ -9,6 +10,7 @@ interface DataMultiPointDisplayProps {
   description?: string;
   showIndex?: boolean;
   indexType?: "number" | "text" | "ordinal";
+  indexUnit?: string;
 }
 
 export default function DataMultiPointDisplay({
@@ -16,12 +18,9 @@ export default function DataMultiPointDisplay({
   description,
   showIndex = true,
   indexType = "text",
+  indexUnit = "Gap",
 }: DataMultiPointDisplayProps) {
-  const indices = {
-    number: [1, 2, 3],
-    text: ["Previous Gap", "2nd Last Gap", "3rd Last Gap"],
-    ordinal: ["1st", "2nd", "3rd"],
-  }[indexType];
+  const indices = generateIndices(dataPoints.length, indexType, indexUnit)
 
   return (
     <div className="flex flex-col">

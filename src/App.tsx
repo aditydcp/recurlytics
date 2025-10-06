@@ -5,6 +5,7 @@ import { GoogleCalendarProvider } from "@/contexts/GoogleCalendarContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PopupProvider } from "@/contexts/PopupContext";
 import { PreferencesProvider } from "@/contexts/preferences/PreferencesContext";
+import { TemplateProvider } from "@/contexts/TemplateContext";
 
 function AppContent() {
   const { isAuthenticated } = useGoogleAuth();
@@ -14,20 +15,22 @@ function AppContent() {
 function App() {
   return (
     <PreferencesProvider>
-      <PopupProvider>
-        <GoogleAuthProvider>
-          <GoogleCalendarProvider>
-            <TooltipProvider>
-              <div className="min-h-screen bg-background text-foreground px-8 flex flex-col items-center justify-center">
-                <AppContent />
-                <footer className="my-8 text-sm text-muted-foreground">
-                  Built with ❤️ using React, TypeScript & shadcn/ui
-                </footer>
-              </div>
-            </TooltipProvider>
-          </GoogleCalendarProvider>
-        </GoogleAuthProvider>
-      </PopupProvider>
+      <TemplateProvider>
+        <PopupProvider>
+          <GoogleAuthProvider>
+            <GoogleCalendarProvider>
+              <TooltipProvider>
+                <div className="min-h-screen bg-background text-foreground px-8 flex flex-col items-center justify-center">
+                  <AppContent />
+                  <footer className="my-8 text-sm text-muted-foreground">
+                    Built with ❤️ using React, TypeScript & shadcn/ui
+                  </footer>
+                </div>
+              </TooltipProvider>
+            </GoogleCalendarProvider>
+          </GoogleAuthProvider>
+        </PopupProvider>
+      </TemplateProvider>
     </PreferencesProvider>
   );
 }
