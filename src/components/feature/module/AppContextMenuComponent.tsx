@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { getNameInitials } from "@/lib/nameInitials";
+import { getNameInitials } from "@/lib/ui/nameInitials";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Bolt, Info, LogOut, User } from "lucide-react";
 import { useGoogleAuth } from "@/contexts/GoogleAuthContext";

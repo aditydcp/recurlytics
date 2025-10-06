@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/ui/utils";
 import { type ComponentProps } from "react";
 
 import { DayButton, DayPicker, getDefaultClassNames, type DateRange } from "react-day-picker";

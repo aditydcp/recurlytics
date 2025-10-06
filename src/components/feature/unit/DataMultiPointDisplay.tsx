@@ -1,6 +1,6 @@
 import { CalendarRangeReadOnly, CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { generateIndices } from "@/lib/orderedListPrefixes";
+import { generateIndices } from "@/lib/ui/orderedListPrefixes";
 import type { DataPoint } from "@/types/DataDisplayType";
 import { format } from "date-fns";
 import { Info } from "lucide-react";

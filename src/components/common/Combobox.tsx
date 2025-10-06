@@ -3,7 +3,7 @@ import { Button } from "../ui/button"
 import { useState } from "react"
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/ui/utils"
 import type { GeneralKeyValue } from "@/types/CommonType"
 
 interface ComboboxProps {
