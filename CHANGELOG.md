@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/aditydcp/recurlytics/compare/v1.1.0...v1.2.0) (2025-10-04)
+
+
+### Features
+
+* implement preference settings ([6c05611](https://github.com/aditydcp/recurlytics/commit/6c05611334dc6b7662b9b111963debda74554683))
+* update favicon ([e0b2238](https://github.com/aditydcp/recurlytics/commit/e0b2238971e786c26915511fc0a94aee8d630c5e))
+
 ## [1.1.0](https://github.com/aditydcp/recurlytics/compare/v1.0.1...v1.1.0) (2025-10-01)
 
 
