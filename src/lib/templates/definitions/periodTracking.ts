@@ -6,7 +6,6 @@ export const PeriodTrackingTemplate: TemplateDefinition = {
   name: "Period Tracking",
   description: "Menstrual cycle prediction and phase tracking.",
   analyticsModules: ["period"],
-  // analyticsModules: ["gap", "cycle", "phase"],
   config: {
     avgCycleLength: 28,
     minCycleLength: 26,
