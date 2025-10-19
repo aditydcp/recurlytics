@@ -5,8 +5,8 @@ export const getNameInitials = (name: string, max: number = 2) => {
   return initials;
 }
 
-export const capitalizeWords = (str: string) => {
-  return str
+export const capitalizeWords = (str?: string) => {
+  return str ? str
     .toLowerCase()
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+    .replace(/\b\w/g, (char) => char.toUpperCase()) : "";
 }

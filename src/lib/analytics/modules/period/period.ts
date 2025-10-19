@@ -2,13 +2,13 @@ import type {
   CycleDetail,
   PeriodAnalyticsResult,
 } from "@/types/analytics/modules/period/PeriodType";
-import { differenceInDays } from "date-fns";
 import type { Gap as Cycle } from "@/types/analytics/modules/gap/GapType";
+import { differenceInDays, isWithinInterval } from "date-fns";
 import { getLastCycles } from "./helper/cycle";
 import { extractPhasesFromCycle } from "./helper/phaseExtract";
 import { predictCycleLength, predictPeriodRange } from "./helper/predict";
 import type { AnalyticsModule } from "@/types/analytics/AnalyticsType";
-import { getGaps } from "@/lib/analytics/helpers/gaps";
+import { extractEventMetadata } from "@/lib/analytics/helpers/gaps";
 
 export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
   id: "period",
@@ -20,11 +20,13 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
         lastCycles: [],
         nextPrediction: null,
         predictionRange: [],
-        currentCyclePhases: null,
+        currentCycle: null,
+        currentPhase: null,
       };
     }
 
-    const { gaps: cycles } = getGaps(events);
+    const { gaps: cycles, lastEventDate: lastPeriodDate } =
+      extractEventMetadata(events);
 
     // fetch last cycles
     const lastCycles = getLastCycles(cycles);
@@ -37,9 +39,8 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
     );
 
     // Generate the period date probability range
-    const lastCycle = lastCycles[0];
     const predictionRange = predictPeriodRange(
-      lastCycle.from,
+      lastPeriodDate,
       cycleLengths,
       config.avgCycleLength
     );
@@ -58,19 +59,34 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
       a.probability > b.probability ? a : b
     ).date;
 
-    // Extract phases from the current cycle
-    const currentCyclePhases = extractPhasesFromCycle({
-      from: lastCycle.from,
+    // Form current cycle item
+    const currentCycle: Cycle = {
+      from: lastPeriodDate,
       to: nextPrediction,
-      gap: Math.round(avgCycleLength),
-    });
+      gap: differenceInDays(nextPrediction, lastPeriodDate),
+    }
+
+    // Extract phases from the current cycle
+    const currentCyclePhases = extractPhasesFromCycle(currentCycle);
+
+    // Get current phase
+    const currentPhase = currentCyclePhases.find((phase) =>
+      isWithinInterval(new Date(), { start: phase.start, end: phase.end })
+    ) || null
+
+    // Get current cycle detail
+    const currentCycleDetail: CycleDetail = {
+      phases: currentCyclePhases,
+      ...currentCycle
+    }
 
     return {
       avgCycleLength,
       lastCycles: lastCyclesDetailed,
       nextPrediction,
       predictionRange,
-      currentCyclePhases,
+      currentCycle: currentCycleDetail,
+      currentPhase,
     };
   },
 };

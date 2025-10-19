@@ -5,5 +5,3 @@ export interface Calendar {
   description?: string;
   backgroundColor?: string;
 }
-
-export type Gap = { from: Date; to: Date; gap: number };

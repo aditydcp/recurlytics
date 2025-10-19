@@ -19,10 +19,10 @@ export const DefaultView = ({
 
   return (
     <div className="grid md:grid-cols-3 gap-4 w-full">
-      <div className="grid gap-4 w-full order-3 md:order-1">
+      <div className="flex flex-col gap-4 w-full order-3 md:order-1">
         <EventTable events={events} />
       </div>
-      <div className="grid gap-4 w-full order-2 md:order-2">
+      <div className="flex flex-col gap-4 w-full order-2 md:order-2">
         <DataDisplayCard
           title="Average Gap"
           tooltip="This is calculated based on the gaps between your past events."
@@ -58,7 +58,7 @@ export const DefaultView = ({
           />
         </DataDisplayCard>
       </div>
-      <div className="grid gap-4 w-full order-1 md:order-3">
+      <div className="flex flex-col gap-4 w-full order-1 md:order-3">
         <DataDisplayCard
           title="Next Event"
           tooltip="Based on your average event gap, this is when your next event is likely to occur."

@@ -39,7 +39,7 @@ export function predictPeriodRange(
   lastPeriodStart: Date,
   cycleLengths: number[],
   normalAvgCycleLength: number,
-  options = { decay: 0.8, priorWeight: 2, defaultStdDev: 2.5, rangeDays: 5 }
+  options = { decay: 0.8, priorWeight: 2, defaultStdDev: 2.5, rangeDays: 2 }
 ): PeriodPrediction[] {
   const { decay, priorWeight, defaultStdDev, rangeDays } = options;
 
