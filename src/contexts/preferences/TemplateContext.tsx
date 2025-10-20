@@ -8,6 +8,7 @@ import {
 } from "react";
 import type { TemplateDefinition } from "@/types/TemplateType";
 import { templateRegistry } from "@/lib/templates/templateRegistry";
+import { usePreferences } from "./PreferencesContext";
 
 interface TemplateContextType {
   templateId: string;
@@ -18,7 +19,8 @@ interface TemplateContextType {
 const TemplateContext = createContext<TemplateContextType | null>(null);
 
 export const TemplateProvider = ({ children }: { children: ReactNode }) => {
-  const [templateId, setTemplateId] = useState("default");
+  const { preferences } = usePreferences();
+  const [templateId, setTemplateId] = useState(preferences.defaultTemplate);
   const currentTemplate = templateRegistry[templateId];
 
   return (

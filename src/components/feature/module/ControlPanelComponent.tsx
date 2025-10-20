@@ -1,7 +1,7 @@
 import Combobox from "@/components/common/Combobox";
 import { useGoogleCalendar } from "@/contexts/GoogleCalendarContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useTemplate } from "@/contexts/TemplateContext";
+import { useTemplate } from "@/contexts/preferences/TemplateContext";
 import { templateDefinitions } from "@/lib/templates/definitions";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { InfoTooltip } from "@/components/common/InfoTooltip";

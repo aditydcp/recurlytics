@@ -1,7 +1,7 @@
 import { useGoogleCalendar } from "@/contexts/GoogleCalendarContext";
 import { useMemo } from "react";
 import { Label } from "@/components/ui/label";
-import { useTemplate } from "@/contexts/TemplateContext";
+import { useTemplate } from "@/contexts/preferences/TemplateContext";
 import { runAnalytics } from "@/lib/analytics/analyticsRunner";
 
 export default function EventAnalyticsComponent() {
