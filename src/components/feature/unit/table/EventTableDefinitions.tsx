@@ -1,19 +1,10 @@
+import type { ColumnDef } from "@tanstack/react-table";
+import type { Event } from "@/types/EventType";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import type { ColumnDef } from "@tanstack/react-table"
-import { format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
-
-export interface EventDateTime {
-  dateTime?: string;
-  date?: string
-}
-
-export interface Event {
-  id: string;
-  summary: string;
-  start: EventDateTime;
-}
+import { Label } from "@/components/ui/label";
+import { format } from "date-fns";
+import { DataTable } from "@/components/common/DataTable";
 
 export const EventColumns: ColumnDef<Event>[] = [
   {
@@ -50,3 +41,14 @@ export const EventColumns: ColumnDef<Event>[] = [
     sortDescFirst: false,
   }
 ]
+
+export const EventTable = ({ events }: { events: Event[] }) => {
+  return (
+    <DataTable
+      className="h-fit"
+      columns={EventColumns}
+      data={events}
+      defaultSortingState={[{ id: 'start', desc: true }]}
+    />
+  )
+}

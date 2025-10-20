@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Preferences } from "@/types/PreferenceType";
 import { ThemeModeProvider } from "@/contexts/preferences/ThemeModeContext";
+import { TemplateProvider } from "@/contexts/preferences/TemplateContext";
 
 const defaultPreferences: Preferences = {
   themeMode: "system",
+  defaultTemplate: "default",
 };
 
 type PreferencesContextType = {
@@ -29,9 +31,11 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <PreferencesContext.Provider value={{ preferences, setPreferences }}>
-      <ThemeModeProvider>
-        {children}
-      </ThemeModeProvider>
+      <TemplateProvider>
+        <ThemeModeProvider>
+          {children}
+        </ThemeModeProvider>
+      </TemplateProvider>
     </PreferencesContext.Provider>
   );
 };

@@ -1,5 +1,5 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/ui/utils"
 import { Info } from "lucide-react"
 import { type ReactNode } from "react"
 

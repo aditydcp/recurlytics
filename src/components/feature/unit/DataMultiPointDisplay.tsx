@@ -1,5 +1,6 @@
 import { CalendarRangeReadOnly, CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { generateIndices } from "@/lib/ui/orderedListPrefixes";
 import type { DataPoint } from "@/types/DataDisplayType";
 import { format } from "date-fns";
 import { Info } from "lucide-react";
@@ -9,6 +10,7 @@ interface DataMultiPointDisplayProps {
   description?: string;
   showIndex?: boolean;
   indexType?: "number" | "text" | "ordinal";
+  indexUnit?: string;
 }
 
 export default function DataMultiPointDisplay({
@@ -16,23 +18,20 @@ export default function DataMultiPointDisplay({
   description,
   showIndex = true,
   indexType = "text",
+  indexUnit = "Gap",
 }: DataMultiPointDisplayProps) {
-  const indices = {
-    number: [1, 2, 3],
-    text: ["Previous Gap", "2nd Last Gap", "3rd Last Gap"],
-    ordinal: ["1st", "2nd", "3rd"],
-  }[indexType];
+  const indices = generateIndices(dataPoints.length, indexType, indexUnit)
 
   return (
     <div className="flex flex-col">
-      <table className="w-full border-separate border-spacing-y-3 border-spacing-x-1 lg:border-spacing-x-2 my-1">
+      <table className="w-fit md:w-full border-separate border-spacing-y-3 border-spacing-x-1 lg:border-spacing-x-2 my-1">
         <colgroup>
           {/* First column: fit content but capped at 1/3 */}
-          <col className="w-[1%] max-w-[33%]" />
+          <col className="md:w-[1%] md:max-w-[33%]" />
           {/* Second column: takes the remaining space (at least 1/3) */}
-          <col className="w-[99%] min-w-[33%]" />
+          <col className="md:w-[99%] md:min-w-[33%]" />
           {/* Third column: takes the remaining space*/}
-          <col className="w-[99%]" />
+          <col className="md:w-[99%]" />
         </colgroup>
         <tbody>
           {dataPoints.map((point, index) => {

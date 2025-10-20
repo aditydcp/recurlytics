@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/ui/utils";
 import { type ComponentProps } from "react";
 
 import { DayButton, DayPicker, getDefaultClassNames, type DateRange } from "react-day-picker";
@@ -113,7 +113,7 @@ function CalendarSingleReadOnly({
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn("bg-accent rounded-r-md", defaultClassNames.range_end),
         today: cn(
-          "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none",
+          "bg-accent text-accent-foreground rounded-full data-[selected=true]:rounded-none",
           defaultClassNames.today
         ),
         disabled: cn(
@@ -347,6 +347,207 @@ function CalendarRangeReadOnly({
   );
 }
 
+function CalendarMultiRangeReadOnly({
+  defaultValue = undefined,
+  selected = undefined,
+  className,
+  classNames,
+  showOutsideDays = true,
+  captionLayout = "label",
+  buttonVariant = "ghost",
+  hideNavigation = false,
+  disableNavigation = false,
+  weekStartsOn = 0,
+  defaultMonth,
+  numberOfMonths = 1,
+  components,
+  rangeColorClassNameList,
+}: ComponentProps<typeof DayPicker> & {
+  defaultValue?: DateRange[];
+  selected?: Date;
+  className?: string;
+  buttonVariant?: React.ComponentProps<typeof Button>["variant"]
+  rangeColorClassNameList?: string[]
+}) {
+  const defaultClassNames = getDefaultClassNames()
+
+  const modifiers: Record<string, any> = {};
+  const modifiersClassNames: Record<string, string> = {};
+  const rangeColorClass = rangeColorClassNameList || ["bg-secondary text-secondary-foreground", "bg-primary text-primary-foreground"]
+
+  defaultValue && defaultValue.forEach((range, i) => {
+    const key = `range${i}`;
+    modifiers[key] = range;
+    modifiers[`${key}_start`] = range.from;
+    modifiers[`${key}_end`] = range.to;
+    modifiersClassNames[key] = cn(
+      "rounded-none text-foreground",
+      rangeColorClass[i % rangeColorClass.length]
+    );
+    modifiersClassNames[`${key}_start`] = cn(
+      "rounded-l-full",
+      rangeColorClass[i % rangeColorClass.length]
+    );
+    modifiersClassNames[`${key}_end`] = cn(
+      "rounded-r-full",
+      rangeColorClass[i % rangeColorClass.length]
+    );
+  });
+
+  return (
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      animate
+      mode="single"
+      defaultMonth={defaultMonth}
+      selected={selected}
+      onSelect={() => { }}
+      onDayKeyDown={() => { }}
+      captionLayout={captionLayout}
+      hideNavigation={hideNavigation}
+      disableNavigation={disableNavigation}
+      weekStartsOn={weekStartsOn}
+      numberOfMonths={numberOfMonths}
+      modifiers={modifiers}
+      modifiersClassNames={modifiersClassNames}
+      className={cn(
+        "bg-background group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+        String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
+        String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
+        className
+      )}
+      classNames={{
+        root: cn("w-fit", defaultClassNames.root),
+        months: cn(
+          "relative flex flex-col gap-4 md:flex-row",
+          defaultClassNames.months
+        ),
+        month: cn("flex w-full flex-col gap-4", defaultClassNames.month),
+        nav: cn(
+          "absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1",
+          defaultClassNames.nav
+        ),
+        button_previous: cn(
+          buttonVariants({ variant: buttonVariant }),
+          "h-[--cell-size] w-[--cell-size] select-none p-0 aria-disabled:opacity-50",
+          defaultClassNames.button_previous
+        ),
+        button_next: cn(
+          buttonVariants({ variant: buttonVariant }),
+          "h-[--cell-size] w-[--cell-size] select-none p-0 aria-disabled:opacity-50",
+          defaultClassNames.button_next
+        ),
+        month_caption: cn(
+          "flex h-[--cell-size] w-full items-center justify-center px-[--cell-size]",
+          defaultClassNames.month_caption
+        ),
+        dropdowns: cn(
+          "flex h-[--cell-size] w-full items-center justify-center gap-1.5 text-sm font-medium",
+          defaultClassNames.dropdowns
+        ),
+        dropdown_root: cn(
+          "has-focus:border-ring border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] relative rounded-md border",
+          defaultClassNames.dropdown_root
+        ),
+        dropdown: cn(
+          "bg-popover absolute inset-0 opacity-0",
+          defaultClassNames.dropdown
+        ),
+        caption_label: cn(
+          "select-none font-medium",
+          captionLayout === "label"
+            ? "text-sm"
+            : "[&>svg]:text-muted-foreground flex h-8 items-center gap-1 rounded-md pl-2 pr-1 text-sm [&>svg]:size-3.5",
+          defaultClassNames.caption_label
+        ),
+        table: "w-full border-collapse",
+        weekdays: cn("flex", defaultClassNames.weekdays),
+        weekday: cn(
+          "text-muted-foreground flex-1 select-none rounded-md text-[0.8rem] font-normal",
+          defaultClassNames.weekday
+        ),
+        week: cn("mt-2 flex w-full", defaultClassNames.week),
+        week_number_header: cn(
+          "w-[--cell-size] select-none",
+          defaultClassNames.week_number_header
+        ),
+        week_number: cn(
+          "text-muted-foreground select-none text-[0.8rem]",
+          defaultClassNames.week_number
+        ),
+        day: cn(
+          "group/day relative aspect-square h-full w-full select-none p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md",
+          defaultClassNames.day
+        ),
+        range_start: cn(
+          "bg-accent rounded-l-md",
+          defaultClassNames.range_start
+        ),
+        range_middle: cn("rounded-none", defaultClassNames.range_middle),
+        range_end: cn("bg-accent rounded-r-md", defaultClassNames.range_end),
+        today: cn(
+          "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none",
+          defaultClassNames.today
+        ),
+        disabled: cn(
+          "text-muted-foreground opacity-50",
+          defaultClassNames.disabled
+        ),
+        outside: cn(
+          "text-muted-foreground aria-selected:text-muted-foreground",
+          defaultClassNames.outside
+        ),
+        hidden: cn("invisible", defaultClassNames.hidden),
+        ...classNames,
+      }}
+      components={{
+        Root: ({ className, rootRef, ...props }) => {
+          return (
+            <div
+              data-slot="calendar"
+              ref={rootRef}
+              className={cn(className)}
+              {...props}
+            />
+          )
+        },
+        Chevron: ({ className, orientation, ...props }) => {
+          if (orientation === "left") {
+            return (
+              <ChevronLeftIcon className={cn("size-4", className)} {...props} />
+            )
+          }
+
+          if (orientation === "right") {
+            return (
+              <ChevronRightIcon
+                className={cn("size-4", className)}
+                {...props}
+              />
+            )
+          }
+
+          return (
+            <ChevronDownIcon className={cn("size-4", className)} {...props} />
+          )
+        },
+        DayButton: CalendarDayMultiRangeReadOnlyComponent,
+        // eslint-disable-next-line react/display-name
+        WeekNumber: ({ children, ...props }) => {
+          return (
+            <td {...props}>
+              <div className="flex size-[--cell-size] items-center justify-center text-center">
+                {children}
+              </div>
+            </td>
+          )
+        },
+        ...components,
+      }}
+    />
+  );
+}
+
 function CalendarDayReadOnlyComponent({
   className,
   day,
@@ -374,6 +575,7 @@ function CalendarDayReadOnlyComponent({
       className={cn(
         "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 flex aspect-square h-auto w-full min-w-[--cell-size] flex-col gap-1 font-normal leading-none data-[range-end=true]:rounded-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] [&>span]:text-xs [&>span]:opacity-70 hover:cursor-default",
         defaultClassNames.day,
+        "rounded-full",
         className
       )}
       aria-label={props['aria-label']}
@@ -389,4 +591,72 @@ function CalendarDayReadOnlyComponent({
   )
 }
 
-export { CalendarSingleReadOnly, CalendarRangeReadOnly, CalendarDayReadOnlyComponent }
+function CalendarDayMultiRangeReadOnlyComponent({
+  className,
+  day,
+  modifiers,
+  readOnly = false,
+  ...props
+}: ComponentProps<typeof DayButton> & { readOnly?: boolean }) {
+  const defaultClassNames = getDefaultClassNames()
+
+  const isInAnyRange = Object.keys(modifiers)
+    .filter((key) => key.startsWith("range"))
+    .some((key) => modifiers[key])
+
+  const isRangeStart = Object.keys(modifiers)
+    .some((key) => /^range\d+_start$/.test(key) && modifiers[key]);
+  const isRangeEnd = Object.keys(modifiers)
+    .some((key) => /^range\d+_end$/.test(key) && modifiers[key]);
+  const isRangeMiddle =
+    isInAnyRange && !isRangeStart && !isRangeEnd;
+
+  return (
+    <Button
+      asChild
+      variant="ghost"
+      size="icon"
+      data-day={day.date.toLocaleDateString()}
+      data-selected-single={
+        modifiers.selected &&
+        !isInAnyRange
+      }
+      data-range-start={isRangeStart && !isRangeEnd}
+      data-range-end={isRangeEnd && !isRangeStart}
+      data-range-single-day={isRangeEnd && isRangeStart}
+      data-range-middle={isRangeMiddle}
+      className={cn(
+        "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground",
+        "group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50",
+        "flex aspect-square h-auto w-full min-w-[--cell-size] flex-col gap-1 font-normal leading-none",
+        "data-[range-end=true]:rounded-r-full data-[range-end=true]:rounded-l-none",
+        "data-[range-middle=true]:rounded-none",
+        "data-[range-start=true]:rounded-l-full data-[range-start=true]:rounded-r-none",
+        "data-[range-single-day=true]:rounded-r-full data-[range-single-day=true]:rounded-l-full",
+        "group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px]",
+        "[&>span]:text-xs [&>span]:opacity-70",
+        "hover:cursor-default",
+        defaultClassNames.day,
+        "rounded-full",
+        className
+      )}
+      aria-label={props['aria-label']}
+      onBlur={props.onBlur}
+      onFocus={() => { }}
+      onKeyDown={() => { }}
+      onClick={() => { }}
+    >
+      <div>
+        {props.children}
+      </div>
+    </Button>
+  )
+}
+
+export {
+  CalendarSingleReadOnly,
+  CalendarRangeReadOnly,
+  CalendarMultiRangeReadOnly,
+  CalendarDayReadOnlyComponent,
+  CalendarDayMultiRangeReadOnlyComponent,
+}
