@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.0.0](https://github.com/aditydcp/recurlytics/compare/v1.2.0...v2.0.0) (2025-10-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* force major release  chore:update view  BREAKING CHANGE: force major version bump due to analytic templates update
+
+### Features
+
+* add multi range read only calendar ([051f151](https://github.com/aditydcp/recurlytics/commit/051f15112ae744d5929c1a877ce50d8fe6ca7258))
+* implement template preference ([4478e92](https://github.com/aditydcp/recurlytics/commit/4478e92059681b2899fd7fc43e796ac5eff49245))
+* implement templates ([ca856f7](https://github.com/aditydcp/recurlytics/commit/ca856f75545dafdc678173afb126e0d3ff75a3e6))
+
+
+### Miscellaneous Chores
+
+* force major release  chore:update view  BREAKING CHANGE: force major version bump due to analytic templates update ([ffae431](https://github.com/aditydcp/recurlytics/commit/ffae4315823a82285a87f72c816196f379aeb41f))
+
 ## [1.2.0](https://github.com/aditydcp/recurlytics/compare/v1.1.0...v1.2.0) (2025-10-04)
 
 
