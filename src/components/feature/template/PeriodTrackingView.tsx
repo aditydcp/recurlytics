@@ -21,7 +21,7 @@ export const PeriodTrackingView = ({
     avgCycleLength,
     lastCycles,
     nextPrediction,
-    predictionRange,
+    // predictionRange,
     currentCycle,
     currentPhase,
   }: PeriodAnalyticsResult = analyticsResults.period;
