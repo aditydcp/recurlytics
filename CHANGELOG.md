@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/aditydcp/recurlytics/compare/v2.0.0...v2.0.1) (2025-10-20)
+
+
+### Bug Fixes
+
+* fix build errors ([38b9f10](https://github.com/aditydcp/recurlytics/commit/38b9f1004af4c6cda1055c48d0df6b1f9302bc20))
+
 ## [2.0.0](https://github.com/aditydcp/recurlytics/compare/v1.2.0...v2.0.0) (2025-10-20)
 
 
