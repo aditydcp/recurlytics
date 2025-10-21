@@ -26,7 +26,7 @@ export const PeriodTrackingView = ({
     currentPhase,
   }: PeriodAnalyticsResult = analyticsResults.period;
 
-  const lastCyclesSlice = lastCycles.slice(3)
+  const lastCyclesSlice = lastCycles.slice(0, 3)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
