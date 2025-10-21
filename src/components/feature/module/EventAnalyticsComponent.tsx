@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { Label } from "@/components/ui/label";
 import { useTemplate } from "@/contexts/preferences/TemplateContext";
 import { runAnalytics } from "@/lib/analytics/analyticsRunner";
+import { Separator } from "@/components/ui/separator";
 
 export default function EventAnalyticsComponent() {
   const {
@@ -24,7 +25,11 @@ export default function EventAnalyticsComponent() {
 
   return (
     <div className="w-full flex flex-col py-2">
-      <Label className="text-xl font-semibold mb-4 ml-4">Event Analytics</Label>
+      <div className="flex flex-row items-center justify-between mb-4 mx-4">
+        <Label className="text-xl font-semibold">Event Analytics</Label>
+        <Separator orientation="horizontal" className="flex-1 hidden md:block mx-6" />
+        <Label className="text-xl font-normal text-muted-foreground text-right">{currentTemplate.name}</Label>
+      </div>
       {loading ? (
         <p className="mx-6 my-4 text-sm text-muted-foreground">
           Loading events...
