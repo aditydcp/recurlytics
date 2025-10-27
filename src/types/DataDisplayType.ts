@@ -19,7 +19,19 @@ export interface DataPointDateGapValue extends DataPointDate {
   gap: number;
 }
 
+export type MetaTopic = Record<
+  string,
+  {
+    alteration?: {
+      condition: boolean;
+      className?: string;
+    };
+    [key: string]: any;
+  }
+>;
+
 export type DataPoint = (DataPointSingleValue | DataPointSingleDateValue | DataPointDateGapValue) & {
   unit?: string;
   description?: string;
+  meta?: MetaTopic;
 };

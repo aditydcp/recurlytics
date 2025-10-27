@@ -2,7 +2,7 @@ export function generateIndices(
   length: number,
   indexType: "number" | "text" | "ordinal",
   indexUnit: string
-): string[] | number[] {
+): string[] {
   const getOrdinal = (n: number) => {
     const suffix = ["th", "st", "nd", "rd"];
     const v = n % 100;
@@ -11,7 +11,7 @@ export function generateIndices(
 
   switch (indexType) {
     case "number":
-      return Array.from({ length }, (_, i) => i + 1);
+      return Array.from({ length }, (_, i) => `${i + 1}`);
 
     case "text":
       return Array.from({ length }, (_, i) =>

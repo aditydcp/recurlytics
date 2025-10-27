@@ -22,6 +22,7 @@ export interface PhaseRange {
 
 export interface CycleDetail extends Cycle {
   phases: PhaseRange[];
+  isLengthNormal: boolean;
 }
 
 export interface CycleLengthStat {

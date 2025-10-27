@@ -1,4 +1,6 @@
+import { getAlterationClass } from "@/lib/ui/multiDisplay";
 import { generateIndices } from "@/lib/ui/orderedListPrefixes";
+import { cn } from "@/lib/ui/utils";
 import type { DataPoint } from "@/types/DataDisplayType";
 import { format } from "date-fns";
 
@@ -42,6 +44,7 @@ export default function DataMultiPointDisplay({
           {dataPoints.map((point, index) => {
             let value: string | number | undefined;
             let textSize = "text-3xl";
+            const alterationClass = getAlterationClass(point.meta);
 
             switch (point.type) {
               case "value":
@@ -67,11 +70,11 @@ export default function DataMultiPointDisplay({
                 )}
                 <td className="align-middle">
                   <div className="flex items-baseline min-w-0 lg:ml-1 gap-x-2">
-                    <span className={`${textSize} font-semibold`}>
+                    <span className={cn(textSize, "font-semibold", alterationClass)}>
                       {value || "N/A"}
                     </span>
                     {point.unit && value && (
-                      <span className="text-sm font-normal">{point.unit}</span>
+                      <span className={cn("text-sm font-normal", alterationClass)}>{point.unit}</span>
                     )}
                   </div>
                 </td>

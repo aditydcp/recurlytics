@@ -38,9 +38,22 @@ const DataDetailDecorator = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex flex-col gap-1", className)} {...props} />
+  <div ref={ref} className={cn("flex flex-row gap-1.5", className)} {...props} />
 ));
 DataDetailDecorator.displayName = "DataDetailDecorator";
+
+// Decorator Population Helper
+const intersperseWithSeparator = (
+  items: React.ReactNode[],
+  separator: React.ReactNode = <span>•</span>
+): React.ReactNode => {
+  return items.reduce<React.ReactNode[]>((acc, item, _index) => {
+    if (item === null || item === undefined || item === false) return acc;
+    if (acc.length > 0) acc.push(separator);
+    acc.push(item);
+    return acc;
+  }, []);
+}
 
 // Content
 const DataDetailContent = React.forwardRef<
@@ -73,5 +86,6 @@ export {
   DataDetailHeader,
   DataDetailTitle,
   DataDetailDecorator,
+  intersperseWithSeparator,
   DataDetailContent
 };

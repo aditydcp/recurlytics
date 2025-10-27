@@ -11,8 +11,9 @@ import { capitalizeWords } from "@/lib/ui/string";
 import { getPhaseIcon } from "@/lib/analytics/helpers/icons";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Info } from "lucide-react";
-import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHeader, DataDetailTitle } from "@/components/common/DataDetailDisplay";
+import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHeader, DataDetailTitle, intersperseWithSeparator } from "@/components/common/DataDetailDisplay";
 import { DateRangeLabel } from "@/components/common/DateRangeLabel";
+import { cn } from "@/lib/ui/utils";
 
 export const PeriodTrackingView = ({
   events,
@@ -104,7 +105,16 @@ export const PeriodTrackingView = ({
                 to: cycle.to,
                 gap: cycle.gap,
                 unit: "days",
-                showCalendar: true
+                showCalendar: true,
+                meta: {
+                  lengthAnalysis: {
+                    isNormal: cycle.isLengthNormal,
+                    alteration: {
+                      condition: !cycle.isLengthNormal,
+                      className: "text-destructive",
+                    }
+                  }
+                }
               } as DataPoint;
               return {
                 type: "value",
@@ -113,6 +123,16 @@ export const PeriodTrackingView = ({
             })}
             decorator={(point, _v, _i, indexLabel, showIndex) => {
               if (point.type !== "dateGap") return null;
+              const isLengthNormal = point.meta?.lengthAnalysis.isNormal as boolean | undefined;
+
+              const items = [
+                showIndex && <span key="index">{indexLabel}</span>,
+                <span key="gap">{point.gap} days</span>,
+                <span className={cn(!isLengthNormal && "text-destructive")}>
+                  {isLengthNormal ? "Regular Length" : "Irregular Length"}
+                </span>,
+              ];
+
               return (
                 <>
                   <HoverCard>
@@ -128,12 +148,8 @@ export const PeriodTrackingView = ({
                     >
                       <DataDetailDisplay>
                         <DataDetailHeader>
-                          <DataDetailDecorator className="text-sm font-normal">
-                            {showIndex && (
-                              <span className="text-muted-foreground">
-                                {indexLabel}
-                              </span>
-                            )}
+                          <DataDetailDecorator className="text-sm font-normal text-muted-foreground">
+                            {intersperseWithSeparator(items)}
                           </DataDetailDecorator>
                           <DataDetailTitle>
                             <DateRangeLabel from={point.from} to={point.to} />
