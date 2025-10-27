@@ -5,10 +5,14 @@ import DataNumberDisplay from "@/components/feature/unit/DataNumberDisplay";
 import DataMultiPointDisplay from "@/components/feature/unit/DataMultiPointDisplay";
 import type { DataPoint } from "@/types/DataDisplayType";
 import { format } from "date-fns";
-import { CalendarMultiRangeReadOnly } from "@/components/common/CalendarReadOnly";
+import { CalendarMultiRangeReadOnly, CalendarRangeReadOnly } from "@/components/common/CalendarReadOnly";
 import type { CycleDetail, PeriodAnalyticsResult, PhaseRange } from "@/types/analytics/modules/period/PeriodType";
 import { capitalizeWords } from "@/lib/ui/string";
 import { getPhaseIcon } from "@/lib/analytics/helpers/icons";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Info } from "lucide-react";
+import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHeader, DataDetailTitle } from "@/components/common/DataDetailDisplay";
+import { DateRangeLabel } from "@/components/common/DateRangeLabel";
 
 export const PeriodTrackingView = ({
   events,
@@ -18,6 +22,7 @@ export const PeriodTrackingView = ({
   analyticsResults: Record<string, any>
 }) => {
   const {
+    // cycleLengthStats,
     avgCycleLength,
     lastCycles,
     nextPrediction,
@@ -106,6 +111,51 @@ export const PeriodTrackingView = ({
                 value: "N/A"
               };
             })}
+            decorator={(point, _v, _i, indexLabel, showIndex) => {
+              if (point.type !== "dateGap") return null;
+              return (
+                <>
+                  <HoverCard>
+                    <HoverCardTrigger className="lg:ml-4 my-auto flex">
+                      <Info
+                        className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent rounded-full cursor-pointer"}
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent
+                      sideOffset={10}
+                      side="bottom"
+                      align="center"
+                    >
+                      <DataDetailDisplay>
+                        <DataDetailHeader>
+                          <DataDetailDecorator className="text-sm font-normal">
+                            {showIndex && (
+                              <span className="text-muted-foreground">
+                                {indexLabel}
+                              </span>
+                            )}
+                          </DataDetailDecorator>
+                          <DataDetailTitle>
+                            <DateRangeLabel from={point.from} to={point.to} />
+                          </DataDetailTitle>
+                        </DataDetailHeader>
+                        <DataDetailContent asChild>
+                          <CalendarRangeReadOnly
+                            defaultValue={{ from: point.from, to: point.to }}
+                            defaultMonth={point.from}
+                            className="w-full min-w-[24rem] rounded-md border border-border bg-card"
+                            disableNavigation
+                            hideNavigation
+                            weekStartsOn={1}
+                            numberOfMonths={2}
+                          />
+                        </DataDetailContent>
+                      </DataDetailDisplay>
+                    </HoverCardContent>
+                  </HoverCard>
+                </>
+              )
+            }}
             description="Cycle length on the last few cycles."
             showIndex={true}
             indexType="text"

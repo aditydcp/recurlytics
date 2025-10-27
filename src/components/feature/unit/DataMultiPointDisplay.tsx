@@ -1,9 +1,6 @@
-import { CalendarRangeReadOnly, CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { generateIndices } from "@/lib/ui/orderedListPrefixes";
 import type { DataPoint } from "@/types/DataDisplayType";
 import { format } from "date-fns";
-import { Info } from "lucide-react";
 
 interface DataMultiPointDisplayProps {
   dataPoints: DataPoint[];
@@ -11,6 +8,13 @@ interface DataMultiPointDisplayProps {
   showIndex?: boolean;
   indexType?: "number" | "text" | "ordinal";
   indexUnit?: string;
+  decorator?: (
+    dataPoint: DataPoint,
+    value: string | number | undefined,
+    index: number,
+    indexLabel: string,
+    showIndex: boolean
+  ) => React.ReactNode;
 }
 
 export default function DataMultiPointDisplay({
@@ -19,6 +23,7 @@ export default function DataMultiPointDisplay({
   showIndex = true,
   indexType = "text",
   indexUnit = "Gap",
+  decorator,
 }: DataMultiPointDisplayProps) {
   const indices = generateIndices(dataPoints.length, indexType, indexUnit)
 
@@ -70,58 +75,9 @@ export default function DataMultiPointDisplay({
                     )}
                   </div>
                 </td>
-                {(point.type === "dateGap" || point.type === "date") && point.showCalendar && (
+                {decorator && (
                   <td className="align-middle hidden md:table-cell">
-                    <HoverCard>
-                      <HoverCardTrigger className="lg:ml-4 my-auto flex">
-                        <Info
-                          className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent rounded-full cursor-pointer"}
-                        />
-                      </HoverCardTrigger>
-                      <HoverCardContent
-                        sideOffset={10}
-                        side="bottom"
-                        align="center"
-                      >
-                        <div className="flex flex-col gap-2">
-                          <div className="flex flex-col mx-1.5">
-                            {showIndex && <span className="text-sm font-normal text-muted-foreground">{indices[index]}</span>}
-                            {point.type === "dateGap" && (
-                              <span className={`text-xl font-semibold`}>
-                                {point.from ? format(point.from, "PPP") : "N/A"} - <br />
-                                {point.to ? format(point.to, "PPP") : "N/A"}
-                              </span>
-                            )}
-                            {point.type === "date" && (
-                              <span className={`text-xl font-semibold`}>
-                                {value || "N/A"}
-                              </span>
-                            )}
-                          </div>
-                          {point.type === "dateGap" && (
-                            <CalendarRangeReadOnly
-                              defaultValue={{ from: point.from, to: point.to }}
-                              defaultMonth={point.from}
-                              className="w-full min-w-[24rem] rounded-md border border-border bg-card"
-                              disableNavigation={true}
-                              hideNavigation={true}
-                              weekStartsOn={1}
-                              numberOfMonths={2}
-                            />
-                          )}
-                          {point.type === "date" && (
-                            <CalendarSingleReadOnly
-                              defaultValue={point.date!}
-                              defaultMonth={point.date!}
-                              className="w-full rounded-md border border-border"
-                              disableNavigation={true}
-                              hideNavigation={true}
-                              weekStartsOn={1}
-                            />
-                          )}
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard>
+                    {decorator(point, value, index, indices[index], showIndex)}
                   </td>
                 )}
               </tr>
