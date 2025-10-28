@@ -34,11 +34,11 @@ export default function DataMultiPointDisplay({
       <table className="w-fit md:w-full border-separate border-spacing-y-3 border-spacing-x-1 lg:border-spacing-x-2 my-1">
         <colgroup>
           {/* First column: fit content but capped at 1/3 */}
-          <col className="md:w-[1%] md:max-w-[33%]" />
+          <col className="w-[33%] md:w-[1%] md:max-w-[33%]" />
           {/* Second column: takes the remaining space (at least 1/3) */}
-          <col className="md:w-[99%] md:min-w-[33%]" />
-          {/* Third column: takes the remaining space*/}
-          <col className="md:w-[99%]" />
+          <col className="w-[99%] md:min-w-[33%]" />
+          {/* Third column: takes the remaining space */}
+          <col className="w-[1%] md:w-[99%]" />
         </colgroup>
         <tbody>
           {dataPoints.map((point, index) => {
@@ -79,7 +79,7 @@ export default function DataMultiPointDisplay({
                   </div>
                 </td>
                 {decorator && (
-                  <td className="align-middle hidden md:table-cell">
+                  <td className="align-middle">
                     {decorator(point, value, index, indices[index], showIndex)}
                   </td>
                 )}

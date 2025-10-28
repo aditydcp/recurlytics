@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { CalendarRangeReadOnly, CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
 import type { Gap } from "@/types/analytics/modules/gap/GapType";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Info } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHeader, DataDetailTitle } from "@/components/common/DataDetailDisplay";
 import { DateRangeLabel } from "@/components/common/DateRangeLabel";
 
@@ -62,8 +62,8 @@ export const DefaultView = ({
                 <>
                   <HoverCard>
                     <HoverCardTrigger className="lg:ml-4 my-auto flex">
-                      <Info
-                        className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent rounded-full cursor-pointer"}
+                      <Calendar
+                        className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent cursor-pointer"}
                       />
                     </HoverCardTrigger>
                     <HoverCardContent

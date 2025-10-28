@@ -9,11 +9,11 @@ import { CalendarMultiRangeReadOnly, CalendarRangeReadOnly } from "@/components/
 import type { CycleDetail, PeriodAnalyticsResult, PhaseRange } from "@/types/analytics/modules/period/PeriodType";
 import { capitalizeWords } from "@/lib/ui/string";
 import { getPhaseIcon } from "@/lib/analytics/helpers/icons";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Info } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHeader, DataDetailTitle, intersperseWithSeparator } from "@/components/common/DataDetailDisplay";
 import { DateRangeLabel } from "@/components/common/DateRangeLabel";
 import { cn } from "@/lib/ui/utils";
+import { CardTooltip, CardTooltipContent, CardTooltipTrigger } from "@/components/common/CardTooltip";
 
 export const PeriodTrackingView = ({
   events,
@@ -135,17 +135,13 @@ export const PeriodTrackingView = ({
 
               return (
                 <>
-                  <HoverCard>
-                    <HoverCardTrigger className="lg:ml-4 my-auto flex">
-                      <Info
-                        className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent rounded-full cursor-pointer"}
+                  <CardTooltip>
+                    <CardTooltipTrigger>
+                      <Calendar
+                        className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent cursor-pointer"}
                       />
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                      sideOffset={10}
-                      side="bottom"
-                      align="center"
-                    >
+                    </CardTooltipTrigger>
+                    <CardTooltipContent>
                       <DataDetailDisplay>
                         <DataDetailHeader>
                           <DataDetailDecorator className="text-sm font-normal text-muted-foreground">
@@ -159,7 +155,7 @@ export const PeriodTrackingView = ({
                           <CalendarRangeReadOnly
                             defaultValue={{ from: point.from, to: point.to }}
                             defaultMonth={point.from}
-                            className="w-full min-w-[24rem] rounded-md border border-border bg-card"
+                            className="w-full md:min-w-[24rem] rounded-md border border-border bg-card"
                             disableNavigation
                             hideNavigation
                             weekStartsOn={1}
@@ -167,8 +163,8 @@ export const PeriodTrackingView = ({
                           />
                         </DataDetailContent>
                       </DataDetailDisplay>
-                    </HoverCardContent>
-                  </HoverCard>
+                    </CardTooltipContent>
+                  </CardTooltip>
                 </>
               )
             }}

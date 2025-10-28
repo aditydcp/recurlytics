@@ -11,7 +11,7 @@ const DataDetailDisplay = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex flex-col gap-2", className)} {...props} />
+  <div ref={ref} className={cn("flex flex-col gap-3 md:gap-2", className)} {...props} />
 ));
 DataDetailDisplay.displayName = "DataDetailDisplay";
 
@@ -47,13 +47,26 @@ const intersperseWithSeparator = (
   items: React.ReactNode[],
   separator: React.ReactNode = <span>•</span>
 ): React.ReactNode => {
-  return items.reduce<React.ReactNode[]>((acc, item, _index) => {
+  return items.reduce<React.ReactNode[]>((acc, item, index) => {
     if (item === null || item === undefined || item === false) return acc;
-    if (acc.length > 0) acc.push(separator);
-    acc.push(item);
+
+    if (acc.length > 0) {
+      acc.push(
+        React.isValidElement(separator)
+          ? React.cloneElement(separator, { key: `sep-${index}` })
+          : <React.Fragment key={`sep-${index}`}>{separator}</React.Fragment>
+      );
+    }
+
+    acc.push(
+      React.isValidElement(item)
+        ? React.cloneElement(item, { key: `item-${index}` })
+        : <React.Fragment key={`item-${index}`}>{item}</React.Fragment>
+    );
+
     return acc;
   }, []);
-}
+};
 
 // Content
 const DataDetailContent = React.forwardRef<
