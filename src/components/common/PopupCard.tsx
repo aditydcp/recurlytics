@@ -18,8 +18,16 @@ export function PopupCard({
       }
     }
     window.addEventListener("keydown", handleClose);
-    return () => { window.removeEventListener("keydown", handleClose); };
-  }, []);
+
+    // prevent background scroll
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", handleClose);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [popup.id, close]);
 
   return (
     <div
@@ -37,7 +45,8 @@ export function PopupCard({
         role="dialog"
         aria-modal="true"
         aria-labelledby={`popup-${popup.id}-title`}
-        className="relative bg-background rounded-lg shadow-lg w-full max-w-lg my-auto border border-border"
+        // className="relative bg-background rounded-lg shadow-lg w-full max-w-lg my-auto border border-border max-h-[85vh] md:max-h-[75vh] grid grid-rows-[auto,minmax(0,1fr),auto] py-6"
+        className="relative flex flex-col h-fit max-h-[min(80vh,600px)] bg-background rounded-lg shadow-lg w-full max-w-lg my-auto border border-border py-6 px-2"
         onClick={(e) => e.stopPropagation()} // prevent close inside
       >
         {/* close button */}
@@ -47,28 +56,30 @@ export function PopupCard({
         >
           <X className="h-5 w-5" />
         </button>
-        <div className="flex flex-col p-6 gap-4">
-          {/* header */}
-          <div className="flex flex-col">
-            <h5
-              id={`popup-${popup.id}-title`}
-              className="text-lg font-semibold"
-            >
-              {popup.title}
-            </h5>
-            <Label className="text-sm text-muted-foreground">{popup.description}</Label>
-          </div>
 
-          {/* content */}
-          {popup.content && <div>{popup.content}</div>}
+        {/* header */}
+        <header className="flex flex-col px-4 pb-2 shrink-0">
+          <h5 id={`popup-${popup.id}-title`} className="text-lg font-semibold">
+            {popup.title}
+          </h5>
+          <Label className="text-sm text-muted-foreground">
+            {popup.description}
+          </Label>
+        </header>
 
-          {/* footer */}
-          {popup.footer && (
-            <div className="flex justify-end gap-2">
-              {popup.footer}
-            </div>
-          )}
-        </div>
+        {/* scrollable content */}
+        {popup.content && (
+          <main className="overflow-y-auto flex-1 px-4 py-2">
+            {popup.content}
+          </main>
+        )}
+
+        {/* footer */}
+        {popup.footer && (
+          <footer className="flex justify-end gap-2 px-4 pt-2 shrink-0">
+            {popup.footer}
+          </footer>
+        )}
       </div>
     </div>
   );

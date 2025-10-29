@@ -135,7 +135,7 @@ export const PeriodTrackingView = ({
 
               return (
                 <>
-                  <CardTooltip>
+                  <CardTooltip popupTitle={"Cycle Details"}>
                     <CardTooltipTrigger>
                       <Calendar
                         className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent cursor-pointer"}
