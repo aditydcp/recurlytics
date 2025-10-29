@@ -3,6 +3,7 @@ import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/h
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/ui/utils";
 import { usePopup } from "@/contexts/PopupContext";
+import { useIsDesktop } from "@/hooks/useIsDesktop";
 
 /**
  * CardTooltip root — finds Trigger and Content children and composes them.
@@ -16,6 +17,7 @@ export function CardTooltip({
   children: React.ReactNode;
   className?: string
 }) {
+  const isDesktop = useIsDesktop();
   const { open } = usePopup();
   const arr = React.Children.toArray(children) as React.ReactElement[];
 
@@ -33,16 +35,11 @@ export function CardTooltip({
   const contentProps = (contentEl?.props ?? {}) as Record<string, any>;
   const contentChild = contentProps.children ?? null;
 
-  return (
+  return isDesktop ? (
     <div className={cn("inline-flex", className)}>
-      {/* Desktop & tablet: full HoverCard */}
       <div className="hidden md:block">
         <HoverCard>
-          {/* HoverCardTrigger expects one child. We use asChild so consumer element is used directly. */}
           <HoverCardTrigger>
-            {/* If consumer passed asChild on CardTooltipTrigger we will pass exactly the child.
-                If they didn't, we still pass the child — it's fine: HoverCardTrigger asChild
-                will wrap the child with the trigger props. */}
             {triggerChild ?? <span />}
           </HoverCardTrigger>
 
@@ -52,10 +49,10 @@ export function CardTooltip({
           </HoverCardContent>
         </HoverCard>
       </div>
-
-      {/* Mobile: only render a button (or the trigger element itself if asChild) */}
+    </div>
+  ) : (
+    <div className={cn("inline-flex", className)}>
       <div className="block md:hidden">
-        {/* Wrap it with our Button so it's tappable on mobile */}
         <Button
           variant="ghost"
           size="icon"
@@ -69,7 +66,7 @@ export function CardTooltip({
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 /**
