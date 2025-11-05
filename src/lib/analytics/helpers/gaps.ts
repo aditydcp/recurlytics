@@ -1,5 +1,5 @@
-import type { Gap } from "@/types/analytics/modules/gap/GapType";
-import { differenceInDays } from "date-fns";
+import type { Gap, GapStat } from "@/types/analytics/modules/gap/GapType";
+import { differenceInDays, isAfter, subMonths } from "date-fns";
 import type { Event } from "@/types/EventType";
 
 /**
@@ -46,3 +46,65 @@ export const extractEventMetadata = (events: Event[]) => {
     lastEventDate,
   };
 };
+
+/**
+ * Compute average, min, and max gap for given time scopes (3m, 6m, 12m, all).
+ * Automatically excludes scopes where data duration is insufficient.
+ */
+export function computeGapStats(gaps: Gap[]): GapStat[] {
+  if (!gaps.length) return [];
+
+  const now = new Date();
+  const stats: GapStat[] = [];
+
+  // Normalize and sort
+  const sortedGaps = [...gaps].sort(
+    (a, b) => a.from.getTime() - b.from.getTime()
+  );
+
+  const earliest = sortedGaps[0].from;
+  const totalMonths =
+    (now.getFullYear() - earliest.getFullYear()) * 12 +
+    (now.getMonth() - earliest.getMonth());
+
+  // Helper to compute stats within time frame
+  const compute = (months: number, label: GapStat["scope"]) => {
+    const cutoff = subMonths(now, months);
+    const filtered = sortedGaps.filter((c) => isAfter(c.to, cutoff));
+
+    if (!filtered.length) return null;
+
+    const lengths = filtered.map((c) => differenceInDays(c.to, c.from));
+    const avg = lengths.reduce((a, b) => a + b, 0) / lengths.length;
+    const min = Math.min(...lengths);
+    const max = Math.max(...lengths);
+
+    return { scope: label, avg, min, max, count: lengths.length};
+  };
+
+  // Dynamically include only valid scopes
+  if (totalMonths >= 3) {
+    const res = compute(3, "3m");
+    if (res) stats.push(res);
+  }
+  if (totalMonths >= 6) {
+    const res = compute(6, "6m");
+    if (res) stats.push(res);
+  }
+  if (totalMonths >= 12) {
+    const res = compute(12, "12m");
+    if (res) stats.push(res);
+  }
+
+  // Always include "all"
+  const allLengths = sortedGaps.map((c) => differenceInDays(c.to, c.from));
+  stats.push({
+    scope: "all",
+    avg: allLengths.reduce((a, b) => a + b, 0) / allLengths.length,
+    min: Math.min(...allLengths),
+    max: Math.max(...allLengths),
+    count: allLengths.length
+  });
+
+  return stats;
+}

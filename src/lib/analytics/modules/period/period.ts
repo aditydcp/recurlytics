@@ -11,7 +11,7 @@ import {
 import { extractPhasesFromCycle } from "./helper/phaseExtract";
 import { predictCycleLength, predictPeriodRange } from "./helper/predict";
 import type { AnalyticsModule } from "@/types/analytics/AnalyticsType";
-import { extractEventMetadata } from "@/lib/analytics/helpers/gaps";
+import { computeGapStats, extractEventMetadata } from "@/lib/analytics/helpers/gaps";
 
 export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
   id: "period",
@@ -19,6 +19,7 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
   compute(events, config) {
     if (!events || events.length < 2) {
       return {
+        cycleLengthStats: [],
         avgCycleLength: null,
         lastCycles: [],
         nextPrediction: null,
@@ -30,6 +31,9 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
 
     const { gaps: cycles, lastEventDate: lastPeriodDate } =
       extractEventMetadata(events);
+
+    // compute cycle length statistics
+    const cycleLengthStats = computeGapStats(cycles);
 
     // fetch last cycles
     const lastCycles = getLastCycles(cycles);
@@ -98,6 +102,7 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
     };
 
     return {
+      cycleLengthStats,
       avgCycleLength,
       lastCycles: lastCyclesDetailed,
       nextPrediction,

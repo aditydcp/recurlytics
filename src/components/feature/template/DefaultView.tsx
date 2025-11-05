@@ -11,6 +11,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Calendar } from "lucide-react";
 import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHeader, DataDetailTitle } from "@/components/common/DataDetailDisplay";
 import { DateRangeLabel } from "@/components/common/DateRangeLabel";
+import { DataMultiPointSwitchDisplay } from "@/components/feature/unit/DataMultiPointSwitchDisplay";
 
 export const DefaultView = ({
   events,
@@ -19,12 +20,28 @@ export const DefaultView = ({
   events: Event[],
   analyticsResults: Record<string, any>
 }) => {
-  const { avgGap, lastGaps, nextPrediction } = analyticsResults.gap;
+  const {
+    avgGap,
+    lastGaps,
+    nextPrediction,
+    gapStats
+  } = analyticsResults.gap;
 
   return (
     <div className="grid md:grid-cols-3 gap-4 w-full">
       <div className="flex flex-col gap-4 w-full order-3 md:order-1">
         <EventTable events={events} />
+        <DataDisplayCard
+          title="Gap Statistics"
+          tooltip="Statistics about the gaps between recurring events over different periods."
+        >
+          <DataMultiPointSwitchDisplay
+            data={gapStats}
+            showIndex={true}
+            className="border-spacing-y-0 lg:border-spacing-y-1 mb-2 mt-0 w-full"
+            customIndices={["Average", "Minimum", "Maximum", "Count"]}
+          />
+        </DataDisplayCard>
       </div>
       <div className="flex flex-col gap-4 w-full order-2 md:order-2">
         <DataDisplayCard

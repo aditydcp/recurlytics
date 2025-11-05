@@ -1,6 +1,6 @@
 export interface DataPointSingleValue {
   type: "value";
-  value: string;
+  value: string | number;
 }
 
 export interface DataPointDate {
@@ -35,3 +35,20 @@ export type DataPoint = (DataPointSingleValue | DataPointSingleDateValue | DataP
   description?: string;
   meta?: MetaTopic;
 };
+
+export interface DataMultiPointDisplayProps {
+  dataPoints: DataPoint[];
+  description?: string;
+  showIndex?: boolean;
+  indexType?: "number" | "text" | "ordinal";
+  indexUnit?: string;
+  customIndices?: string[];
+  decorator?: (
+    dataPoint: DataPoint,
+    value: string | number | undefined,
+    index: number,
+    indexLabel: string,
+    showIndex: boolean
+  ) => React.ReactNode;
+  className?: string;
+}

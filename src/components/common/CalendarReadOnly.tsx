@@ -620,10 +620,6 @@ function CalendarDayMultiRangeReadOnlyComponent({
   const isRangeMiddle =
     isInAnyRange && !isRangeStart && !isRangeEnd;
 
-  if (modifiers.today_in_range) {
-    console.log(modifiers)
-  }
-
   return (
     <Button
       asChild

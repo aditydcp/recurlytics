@@ -1,4 +1,7 @@
-import type { Gap as Cycle } from "@/types/analytics/modules/gap/GapType";
+import type {
+  Gap as Cycle,
+  GapStat as CycleLengthStat,
+} from "@/types/analytics/modules/gap/GapType";
 
 export interface PeriodPrediction {
   date: Date;
@@ -6,6 +9,7 @@ export interface PeriodPrediction {
 }
 
 export interface PeriodAnalyticsResult {
+  cycleLengthStats: CycleLengthStat[];
   avgCycleLength: number | null;
   lastCycles: CycleDetail[];
   nextPrediction: Date | null;
@@ -23,11 +27,4 @@ export interface PhaseRange {
 export interface CycleDetail extends Cycle {
   phases: PhaseRange[];
   isLengthNormal: boolean;
-}
-
-export interface CycleLengthStat {
-  scope: "3m" | "6m" | "12m" | "all";
-  avg: number;
-  min: number;
-  max: number;
 }

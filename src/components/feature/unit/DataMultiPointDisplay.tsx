@@ -1,23 +1,8 @@
 import { getAlterationClass } from "@/lib/ui/multiDisplay";
 import { generateIndices } from "@/lib/ui/orderedListPrefixes";
 import { cn } from "@/lib/ui/utils";
-import type { DataPoint } from "@/types/DataDisplayType";
+import type { DataMultiPointDisplayProps } from "@/types/DataDisplayType";
 import { format } from "date-fns";
-
-interface DataMultiPointDisplayProps {
-  dataPoints: DataPoint[];
-  description?: string;
-  showIndex?: boolean;
-  indexType?: "number" | "text" | "ordinal";
-  indexUnit?: string;
-  decorator?: (
-    dataPoint: DataPoint,
-    value: string | number | undefined,
-    index: number,
-    indexLabel: string,
-    showIndex: boolean
-  ) => React.ReactNode;
-}
 
 export default function DataMultiPointDisplay({
   dataPoints,
@@ -25,13 +10,20 @@ export default function DataMultiPointDisplay({
   showIndex = true,
   indexType = "text",
   indexUnit = "Gap",
+  customIndices,
   decorator,
+  className,
 }: DataMultiPointDisplayProps) {
-  const indices = generateIndices(dataPoints.length, indexType, indexUnit)
+  const indices = customIndices || generateIndices(dataPoints.length, indexType, indexUnit)
 
   return (
-    <div className="flex flex-col">
-      <table className="w-fit md:w-full border-separate border-spacing-y-3 border-spacing-x-1 lg:border-spacing-x-2 my-1">
+    <div className="flex flex-col w-full">
+      <table
+        className={cn(
+          "w-fit md:w-full border-separate border-spacing-y-3 border-spacing-x-1 lg:border-spacing-x-2 my-1",
+          className,
+        )}
+      >
         <colgroup>
           {/* First column: fit content but capped at 1/3 */}
           <col className="w-[33%] md:w-[1%] md:max-w-[33%]" />
@@ -48,7 +40,11 @@ export default function DataMultiPointDisplay({
 
             switch (point.type) {
               case "value":
-                value = point.value;
+                if (typeof point.value === "number") {
+                  value = Number(point.value.toFixed(2));
+                } else {
+                  value = point.value;
+                }
                 break;
               case "dateGap":
                 value = point.gap;
@@ -74,7 +70,9 @@ export default function DataMultiPointDisplay({
                       {value || "N/A"}
                     </span>
                     {point.unit && value && (
-                      <span className={cn("text-sm font-normal", alterationClass)}>{point.unit}</span>
+                      <span className={cn("text-sm font-normal", alterationClass)}>
+                        {point.unit}
+                      </span>
                     )}
                   </div>
                 </td>

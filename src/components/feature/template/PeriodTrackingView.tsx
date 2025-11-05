@@ -14,6 +14,7 @@ import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHe
 import { DateRangeLabel } from "@/components/common/DateRangeLabel";
 import { cn } from "@/lib/ui/utils";
 import { CardTooltip, CardTooltipContent, CardTooltipTrigger } from "@/components/common/CardTooltip";
+import { DataMultiPointSwitchDisplay } from "@/components/feature/unit/DataMultiPointSwitchDisplay";
 
 export const PeriodTrackingView = ({
   events,
@@ -23,7 +24,7 @@ export const PeriodTrackingView = ({
   analyticsResults: Record<string, any>
 }) => {
   const {
-    // cycleLengthStats,
+    cycleLengthStats,
     avgCycleLength,
     lastCycles,
     nextPrediction,
@@ -179,6 +180,17 @@ export const PeriodTrackingView = ({
       {/* 📅 Event Table Section */}
       <div className="order-3 md:order-3 md:col-span-1 xl:order-1 xl:col-span-1 flex flex-col gap-4 w-full">
         <EventTable events={events} />
+        <DataDisplayCard
+          title="Cycle Statistics"
+          tooltip="Statistics about your cycle lengths over different periods."
+        >
+          <DataMultiPointSwitchDisplay
+            data={cycleLengthStats}
+            showIndex={true}
+            className="border-spacing-y-0 lg:border-spacing-y-1 mb-2 mt-0 w-full"
+            customIndices={["Average", "Minimum", "Maximum", "Count"]}
+          />
+        </DataDisplayCard>
       </div>
     </div>
   )

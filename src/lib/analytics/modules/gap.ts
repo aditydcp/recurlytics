@@ -1,7 +1,7 @@
 import { addDays } from "date-fns";
 import type { AnalyticsModule } from "@/types/analytics/AnalyticsType";
 import type { GapAnalyticsResult } from "@/types/analytics/modules/gap/GapType";
-import { extractEventMetadata } from "@/lib/analytics/helpers/gaps";
+import { computeGapStats, extractEventMetadata } from "@/lib/analytics/helpers/gaps";
 
 export const gapModule: AnalyticsModule<GapAnalyticsResult> = {
   id: "gap",
@@ -18,10 +18,13 @@ export const gapModule: AnalyticsModule<GapAnalyticsResult> = {
 
     const nextPrediction = addDays(lastEventDate, Math.round(avgGap));
 
+    const gapStats = computeGapStats(gaps)
+
     return {
       avgGap,
       lastGaps,
       nextPrediction,
+      gapStats,
     };
   },
 };
