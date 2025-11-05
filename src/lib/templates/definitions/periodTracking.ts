@@ -8,8 +8,8 @@ export const PeriodTrackingTemplate: TemplateDefinition = {
   analyticsModules: ["period"],
   config: {
     avgCycleLength: 28,
-    minCycleLength: 26,
-    maxCycleLength: 32,
+    minCycleLength: 21,
+    maxCycleLength: 35,
     menstrualLength: 5,
     follicularFromPeriodLength: 14,
     lutealLength: 14,
