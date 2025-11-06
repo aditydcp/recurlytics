@@ -373,7 +373,7 @@ function CalendarMultiRangeReadOnly({
 
   const modifiers: Record<string, any> = {};
   const modifiersClassNames: Record<string, string> = {};
-  const rangeColorClass = rangeColorClassNameList || ["bg-secondary text-secondary-foreground", "bg-primary text-primary-foreground"]
+  const rangeColorClass = rangeColorClassNameList || ["bg-secondary text-secondary-foreground ring-secondary", "bg-primary text-primary-foreground ring-primary"]
 
   defaultValue && defaultValue.forEach((range, i) => {
     const key = `range${i}`;
@@ -385,13 +385,22 @@ function CalendarMultiRangeReadOnly({
       rangeColorClass[i % rangeColorClass.length]
     );
     modifiersClassNames[`${key}_start`] = cn(
-      "rounded-l-full",
+      "rounded-l-full text-foreground",
       rangeColorClass[i % rangeColorClass.length]
     );
     modifiersClassNames[`${key}_end`] = cn(
-      "rounded-r-full",
+      "rounded-r-full text-foreground",
       rangeColorClass[i % rangeColorClass.length]
     );
+
+    const includesToday = range.from && range.to && new Date() >= range.from && new Date() <= range.to;
+    if (includesToday) {
+      modifiers["today_in_range"] = new Date();
+      modifiersClassNames["today_in_range"] = cn(
+        "text-foreground",
+        rangeColorClass[i % rangeColorClass.length]
+      );
+    }
   });
 
   return (
@@ -625,6 +634,7 @@ function CalendarDayMultiRangeReadOnlyComponent({
       data-range-end={isRangeEnd && !isRangeStart}
       data-range-single-day={isRangeEnd && isRangeStart}
       data-range-middle={isRangeMiddle}
+      data-today-in-range={modifiers.today_in_range}
       className={cn(
         "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground",
         "group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50",
@@ -634,6 +644,7 @@ function CalendarDayMultiRangeReadOnlyComponent({
         "data-[range-start=true]:rounded-l-full data-[range-start=true]:rounded-r-none",
         "data-[range-single-day=true]:rounded-r-full data-[range-single-day=true]:rounded-l-full",
         "group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px]",
+        "data-[today-in-range=true]:ring-2 data-[today-in-range=true]:z-10 data-[today-in-range=true]:relative data-[today-in-range=true]:rounded-full",
         "[&>span]:text-xs [&>span]:opacity-70",
         "hover:cursor-default",
         defaultClassNames.day,

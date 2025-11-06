@@ -1,4 +1,4 @@
-import type { PeriodPrediction } from "@/types/analytics/modules/period/PeriodType";
+import type { PredictionDate } from "@/types/analytics/modules/gap/GapType";
 import { addDays } from "date-fns";
 
 /**
@@ -40,7 +40,7 @@ export function predictPeriodRange(
   cycleLengths: number[],
   normalAvgCycleLength: number,
   options = { decay: 0.8, priorWeight: 2, defaultStdDev: 2.5, rangeDays: 2 }
-): PeriodPrediction[] {
+): PredictionDate[] {
   const { decay, priorWeight, defaultStdDev, rangeDays } = options;
 
   const meanCycleLength = predictCycleLength(cycleLengths, normalAvgCycleLength, {
@@ -60,7 +60,7 @@ export function predictPeriodRange(
 
   // Gaussian-like probability distribution around mean
   const denom = stdDev * Math.sqrt(2 * Math.PI);
-  const results: PeriodPrediction[] = [];
+  const results: PredictionDate[] = [];
 
   for (let offset = -rangeDays; offset <= rangeDays; offset++) {
     const date = addDays(lastPeriodStart, Math.round(meanCycleLength + offset));

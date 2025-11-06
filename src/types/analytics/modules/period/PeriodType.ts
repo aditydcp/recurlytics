@@ -1,15 +1,15 @@
-import type { Gap as Cycle } from "@/types/analytics/modules/gap/GapType";
-
-export interface PeriodPrediction {
-  date: Date;
-  probability: number;
-}
+import type {
+  Gap as Cycle,
+  GapStat as CycleLengthStat,
+  PredictionDate,
+} from "@/types/analytics/modules/gap/GapType";
 
 export interface PeriodAnalyticsResult {
+  cycleLengthStats: CycleLengthStat[];
   avgCycleLength: number | null;
   lastCycles: CycleDetail[];
   nextPrediction: Date | null;
-  predictionRange: PeriodPrediction[];
+  predictionRange: PredictionDate[];
   currentCycle: CycleDetail | null;
   currentPhase: PhaseRange | null;
 }
@@ -22,11 +22,5 @@ export interface PhaseRange {
 
 export interface CycleDetail extends Cycle {
   phases: PhaseRange[];
-}
-
-export interface CycleLengthStat {
-  scope: "3m" | "6m" | "12m" | "all";
-  avg: number;
-  min: number;
-  max: number;
+  isLengthNormal: boolean;
 }

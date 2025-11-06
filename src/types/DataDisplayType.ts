@@ -1,6 +1,6 @@
 export interface DataPointSingleValue {
   type: "value";
-  value: string;
+  value: string | number;
 }
 
 export interface DataPointDate {
@@ -19,7 +19,41 @@ export interface DataPointDateGapValue extends DataPointDate {
   gap: number;
 }
 
+export type MetaTopic = Record<
+  string,
+  {
+    alteration?: {
+      condition: boolean;
+      className?: string;
+    };
+    [key: string]: any;
+  }
+>;
+
 export type DataPoint = (DataPointSingleValue | DataPointSingleDateValue | DataPointDateGapValue) & {
   unit?: string;
   description?: string;
+  meta?: MetaTopic;
 };
+
+export interface DataMultiPointDisplayProps {
+  dataPoints: DataPoint[];
+  description?: string;
+  showIndex?: boolean;
+  indexType?: "number" | "text" | "ordinal";
+  indexUnit?: string;
+  customIndices?: string[];
+  decorator?: (
+    dataPoint: DataPoint,
+    value: string | number | undefined,
+    index: number,
+    indexLabel: string,
+    showIndex: boolean
+  ) => React.ReactNode;
+  className?: string;
+}
+
+export interface DataProbabilityPoint {
+  label: string;
+  probability: number;
+}

@@ -3,12 +3,20 @@ import { EventTable } from "@/components/feature/unit/table/EventTableDefinition
 import type { Event } from "@/types/EventType";
 import DataNumberDisplay from "@/components/feature/unit/DataNumberDisplay";
 import DataMultiPointDisplay from "@/components/feature/unit/DataMultiPointDisplay";
-import type { DataPoint } from "@/types/DataDisplayType";
+import type { DataPoint, DataProbabilityPoint } from "@/types/DataDisplayType";
 import { format } from "date-fns";
-import { CalendarMultiRangeReadOnly } from "@/components/common/CalendarReadOnly";
+import { CalendarMultiRangeReadOnly, CalendarRangeReadOnly } from "@/components/common/CalendarReadOnly";
 import type { CycleDetail, PeriodAnalyticsResult, PhaseRange } from "@/types/analytics/modules/period/PeriodType";
 import { capitalizeWords } from "@/lib/ui/string";
 import { getPhaseIcon } from "@/lib/analytics/helpers/icons";
+import { Calendar, Info } from "lucide-react";
+import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHeader, DataDetailTitle, intersperseWithSeparator } from "@/components/common/DataDetailDisplay";
+import { DateRangeLabel } from "@/components/common/DateRangeLabel";
+import { cn } from "@/lib/ui/utils";
+import { CardTooltip, CardTooltipContent, CardTooltipTrigger } from "@/components/common/CardTooltip";
+import { DataMultiPointSwitchDisplay } from "@/components/feature/unit/DataMultiPointSwitchDisplay";
+import { ProbabilityDistributionBubblesComponent } from "../unit/ProbabilityDistributionBubblesComponent";
+import { Label } from "@/components/ui/label";
 
 export const PeriodTrackingView = ({
   events,
@@ -18,15 +26,16 @@ export const PeriodTrackingView = ({
   analyticsResults: Record<string, any>
 }) => {
   const {
+    cycleLengthStats,
     avgCycleLength,
     lastCycles,
     nextPrediction,
-    // predictionRange,
+    predictionRange,
     currentCycle,
     currentPhase,
   }: PeriodAnalyticsResult = analyticsResults.period;
 
-  const lastCyclesSlice = lastCycles.slice(3)
+  const lastCyclesSlice = lastCycles.slice(0, 3)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
@@ -40,7 +49,37 @@ export const PeriodTrackingView = ({
             {/* Header */}
             <div className="flex flex-wrap md:flex-nowrap gap-y-2">
               <div className="flex flex-col gap-1 items-start w-full">
-                <div className="text-sm text-muted-foreground">Predicted Next Period</div>
+                <div className="flex items-center space-x-1 md:space-x-3 text-muted-foreground">
+                  <Label className="text-sm">Predicted Next Period</Label>
+                  <CardTooltip popupTitle={"Next Period Prediction"}>
+                    <CardTooltipTrigger>
+                      <Info
+                        className={"w-4 h-4 hover:text-primary hover:bg-accent cursor-pointer"}
+                      />
+                    </CardTooltipTrigger>
+                    <CardTooltipContent>
+                      <div className="flex flex-col gap-1 max-w-xs p-1">
+                        <Label>
+                          The next period date is a probability distribution among these dates,
+                          with the highest probability falls on <span className="text-primary">{format(nextPrediction!, "EEE, MMM d")}</span>.
+                        </Label>
+                        <ProbabilityDistributionBubblesComponent
+                          predictionRange={predictionRange.map(pr => {
+                            return {
+                              label: format(pr.date, "MMM dd"),
+                              probability: pr.probability
+                            } as DataProbabilityPoint
+                          })}
+                          labelMode="label"
+                          maxBubbleSize={82}
+                          minBubbleSize={48}
+                          maxTextSize={14}
+                          minTextSize={8}
+                        />
+                      </div>
+                    </CardTooltipContent>
+                  </CardTooltip>
+                </div>
                 <div className="text-3xl font-semibold">
                   {format(nextPrediction!, "EEE, MMM d")}
                 </div>
@@ -99,13 +138,69 @@ export const PeriodTrackingView = ({
                 to: cycle.to,
                 gap: cycle.gap,
                 unit: "days",
-                showCalendar: true
+                showCalendar: true,
+                meta: {
+                  lengthAnalysis: {
+                    isNormal: cycle.isLengthNormal,
+                    alteration: {
+                      condition: !cycle.isLengthNormal,
+                      className: "text-destructive",
+                    }
+                  }
+                }
               } as DataPoint;
               return {
                 type: "value",
                 value: "N/A"
               };
             })}
+            decorator={(point, _v, _i, indexLabel, showIndex) => {
+              if (point.type !== "dateGap") return null;
+              const isLengthNormal = point.meta?.lengthAnalysis.isNormal as boolean | undefined;
+
+              const items = [
+                showIndex && <span key="index">{indexLabel}</span>,
+                <span key="gap">{point.gap} days</span>,
+                <span className={cn(!isLengthNormal && "text-destructive")}>
+                  {isLengthNormal ? "Regular Length" : "Irregular Length"}
+                </span>,
+              ];
+
+              return (
+                <>
+                  <CardTooltip popupTitle={"Cycle Details"}>
+                    <CardTooltipTrigger>
+                      <Calendar
+                        className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent cursor-pointer"}
+                      />
+                    </CardTooltipTrigger>
+                    <CardTooltipContent>
+                      <DataDetailDisplay>
+                        <DataDetailHeader>
+                          <DataDetailDecorator className="text-sm font-normal text-muted-foreground">
+                            {intersperseWithSeparator(items)}
+                          </DataDetailDecorator>
+                          <DataDetailTitle>
+                            <DateRangeLabel from={point.from} to={point.to} />
+                          </DataDetailTitle>
+                        </DataDetailHeader>
+                        <DataDetailContent asChild>
+                          <CalendarRangeReadOnly
+                            defaultValue={{ from: point.from, to: point.to }}
+                            defaultMonth={point.from}
+                            className="w-full md:min-w-[24rem] rounded-md border border-border bg-card"
+                            disableNavigation
+                            hideNavigation
+                            weekStartsOn={1}
+                            numberOfMonths={2}
+                          />
+                        </DataDetailContent>
+                      </DataDetailDisplay>
+                    </CardTooltipContent>
+                  </CardTooltip>
+                </>
+              )
+            }}
             description="Cycle length on the last few cycles."
             showIndex={true}
             indexType="text"
@@ -117,6 +212,17 @@ export const PeriodTrackingView = ({
       {/* 📅 Event Table Section */}
       <div className="order-3 md:order-3 md:col-span-1 xl:order-1 xl:col-span-1 flex flex-col gap-4 w-full">
         <EventTable events={events} />
+        <DataDisplayCard
+          title="Cycle Statistics"
+          tooltip="Statistics about your cycle lengths over different periods."
+        >
+          <DataMultiPointSwitchDisplay
+            data={cycleLengthStats}
+            showIndex={true}
+            className="border-spacing-y-0 lg:border-spacing-y-1 mb-2 mt-0 w-full"
+            customIndices={["Average", "Minimum", "Maximum", "Count"]}
+          />
+        </DataDisplayCard>
       </div>
     </div>
   )

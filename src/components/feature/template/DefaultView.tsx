@@ -5,8 +5,13 @@ import DataNumberDisplay from "@/components/feature/unit/DataNumberDisplay";
 import DataMultiPointDisplay from "@/components/feature/unit/DataMultiPointDisplay";
 import type { DataPoint } from "@/types/DataDisplayType";
 import { format } from "date-fns";
-import { CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
+import { CalendarRangeReadOnly, CalendarSingleReadOnly } from "@/components/common/CalendarReadOnly";
 import type { Gap } from "@/types/analytics/modules/gap/GapType";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Calendar } from "lucide-react";
+import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHeader, DataDetailTitle } from "@/components/common/DataDetailDisplay";
+import { DateRangeLabel } from "@/components/common/DateRangeLabel";
+import { DataMultiPointSwitchDisplay } from "@/components/feature/unit/DataMultiPointSwitchDisplay";
 
 export const DefaultView = ({
   events,
@@ -15,12 +20,28 @@ export const DefaultView = ({
   events: Event[],
   analyticsResults: Record<string, any>
 }) => {
-  const { avgGap, lastGaps, nextPrediction } = analyticsResults.gap;
+  const {
+    avgGap,
+    lastGaps,
+    nextPrediction,
+    gapStats
+  } = analyticsResults.gap;
 
   return (
     <div className="grid md:grid-cols-3 gap-4 w-full">
       <div className="flex flex-col gap-4 w-full order-3 md:order-1">
         <EventTable events={events} />
+        <DataDisplayCard
+          title="Gap Statistics"
+          tooltip="Statistics about the gaps between recurring events over different periods."
+        >
+          <DataMultiPointSwitchDisplay
+            data={gapStats}
+            showIndex={true}
+            className="border-spacing-y-0 lg:border-spacing-y-1 mb-2 mt-0 w-full"
+            customIndices={["Average", "Minimum", "Maximum", "Count"]}
+          />
+        </DataDisplayCard>
       </div>
       <div className="flex flex-col gap-4 w-full order-2 md:order-2">
         <DataDisplayCard
@@ -52,6 +73,51 @@ export const DefaultView = ({
                 value: "N/A"
               };
             })}
+            decorator={(point, _v, _i, indexLabel, showIndex) => {
+              if (point.type !== "dateGap") return null;
+              return (
+                <>
+                  <HoverCard>
+                    <HoverCardTrigger className="lg:ml-4 my-auto flex">
+                      <Calendar
+                        className={"opacity-50 w-4 h-4 hover:text-primary hover:bg-accent cursor-pointer"}
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent
+                      sideOffset={10}
+                      side="bottom"
+                      align="center"
+                    >
+                      <DataDetailDisplay>
+                        <DataDetailHeader>
+                          <DataDetailDecorator className="text-sm font-normal">
+                            {showIndex && (
+                              <span className="text-muted-foreground">
+                                {indexLabel}
+                              </span>
+                            )}
+                          </DataDetailDecorator>
+                          <DataDetailTitle>
+                            <DateRangeLabel from={point.from} to={point.to} />
+                          </DataDetailTitle>
+                        </DataDetailHeader>
+                        <DataDetailContent asChild>
+                          <CalendarRangeReadOnly
+                            defaultValue={{ from: point.from, to: point.to }}
+                            defaultMonth={point.from}
+                            className="w-full min-w-[24rem] rounded-md border border-border bg-card"
+                            disableNavigation
+                            hideNavigation
+                            weekStartsOn={1}
+                            numberOfMonths={2}
+                          />
+                        </DataDetailContent>
+                      </DataDetailDisplay>
+                    </HoverCardContent>
+                  </HoverCard>
+                </>
+              )
+            }}
             description="Gaps (in days) between your last few events."
             showIndex={true}
             indexType="text"

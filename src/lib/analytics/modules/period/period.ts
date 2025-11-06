@@ -4,11 +4,14 @@ import type {
 } from "@/types/analytics/modules/period/PeriodType";
 import type { Gap as Cycle } from "@/types/analytics/modules/gap/GapType";
 import { differenceInDays, isWithinInterval } from "date-fns";
-import { getLastCycles } from "./helper/cycle";
+import {
+  getLastCycles,
+  isCycleLengthNormal,
+} from "./helper/cycle";
 import { extractPhasesFromCycle } from "./helper/phaseExtract";
 import { predictCycleLength, predictPeriodRange } from "./helper/predict";
 import type { AnalyticsModule } from "@/types/analytics/AnalyticsType";
-import { extractEventMetadata } from "@/lib/analytics/helpers/gaps";
+import { computeGapStats, extractEventMetadata } from "@/lib/analytics/helpers/gaps";
 
 export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
   id: "period",
@@ -16,6 +19,7 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
   compute(events, config) {
     if (!events || events.length < 2) {
       return {
+        cycleLengthStats: [],
         avgCycleLength: null,
         lastCycles: [],
         nextPrediction: null,
@@ -27,6 +31,9 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
 
     const { gaps: cycles, lastEventDate: lastPeriodDate } =
       extractEventMetadata(events);
+
+    // compute cycle length statistics
+    const cycleLengthStats = computeGapStats(cycles);
 
     // fetch last cycles
     const lastCycles = getLastCycles(cycles);
@@ -48,9 +55,16 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
     // Populate each cycles with phases
     const lastCyclesDetailed: CycleDetail[] = lastCycles.map((cycle) => {
       const phase = extractPhasesFromCycle(cycle);
+      const isLengthNormal = isCycleLengthNormal(
+        cycle.gap,
+        config.minCycleLength,
+        config.maxCycleLength,
+        avgCycleLength
+      );
       return {
         ...cycle,
         phases: phase,
+        isLengthNormal,
       };
     });
 
@@ -64,23 +78,31 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
       from: lastPeriodDate,
       to: nextPrediction,
       gap: differenceInDays(nextPrediction, lastPeriodDate),
-    }
+    };
 
     // Extract phases from the current cycle
     const currentCyclePhases = extractPhasesFromCycle(currentCycle);
 
     // Get current phase
-    const currentPhase = currentCyclePhases.find((phase) =>
-      isWithinInterval(new Date(), { start: phase.start, end: phase.end })
-    ) || null
+    const currentPhase =
+      currentCyclePhases.find((phase) =>
+        isWithinInterval(new Date(), { start: phase.start, end: phase.end })
+      ) || null;
 
     // Get current cycle detail
     const currentCycleDetail: CycleDetail = {
       phases: currentCyclePhases,
-      ...currentCycle
-    }
+      ...currentCycle,
+      isLengthNormal: isCycleLengthNormal(
+        currentCycle.gap,
+        config.minCycleLength,
+        config.maxCycleLength,
+        avgCycleLength
+      ),
+    };
 
     return {
+      cycleLengthStats,
       avgCycleLength,
       lastCycles: lastCyclesDetailed,
       nextPrediction,
