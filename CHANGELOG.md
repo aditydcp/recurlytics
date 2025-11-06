@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.1.0](https://github.com/aditydcp/recurlytics/compare/v2.0.1...v2.1.0) (2025-11-06)
+
+
+### Features
+
+* add mobile card tooltip ([e2d3b65](https://github.com/aditydcp/recurlytics/commit/e2d3b650aba967e4731b13a31bb169fdfe2f8d79))
+* add mobile simple tooltip ([257aea0](https://github.com/aditydcp/recurlytics/commit/257aea0c35df4b8afc35862f3a3596fef6164a72))
+* add today's date ([1f11bac](https://github.com/aditydcp/recurlytics/commit/1f11bac4e21cc2170d550b487f51722f1b47148a))
+* display gap statistics ([21fb9f0](https://github.com/aditydcp/recurlytics/commit/21fb9f0ddd738c54e8be2e292259cc41b8b696aa))
+* highlight irregular cycle ([c9cf87e](https://github.com/aditydcp/recurlytics/commit/c9cf87eb4cdac098766898c984cc51f28df1b2b6))
+* show prediction probabilities ([d08c0be](https://github.com/aditydcp/recurlytics/commit/d08c0be8c9735318f0c1b01cb436db66f994e7b5))
+* show today on multi range calendar ([0974b12](https://github.com/aditydcp/recurlytics/commit/0974b12b4e056d2aef2ca9b60a8f5cce06ce80d0))
+
+
+### Bug Fixes
+
+* fix showing the correct recent cycles ([feb4efb](https://github.com/aditydcp/recurlytics/commit/feb4efb8f7dee67b224ddaf757f8190d03bd9f9f))
+* popup card restructure ([cb371ee](https://github.com/aditydcp/recurlytics/commit/cb371ee74a9b9712aec29e19aeb8353b157ca281))
+* show template name on title level ([b099e1e](https://github.com/aditydcp/recurlytics/commit/b099e1e6c7f4b6d44a11b74498318e06f7a38884))
+* update normal cycle range ([8aa840a](https://github.com/aditydcp/recurlytics/commit/8aa840a8c8c32bc13533c99ece8a7c80173954d5))
+
 ## [2.0.1](https://github.com/aditydcp/recurlytics/compare/v2.0.0...v2.0.1) (2025-10-20)
 
 
