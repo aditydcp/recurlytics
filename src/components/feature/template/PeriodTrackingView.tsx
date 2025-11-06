@@ -35,8 +35,6 @@ export const PeriodTrackingView = ({
     currentPhase,
   }: PeriodAnalyticsResult = analyticsResults.period;
 
-  console.log(predictionRange)
-
   const lastCyclesSlice = lastCycles.slice(0, 3)
 
   return (

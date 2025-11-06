@@ -19,7 +19,6 @@ export const EventColumns: ColumnDef<Event>[] = [
         <Button
           variant="ghost"
           onClick={() => {
-            console.log("Sorting by date");
             column.toggleSorting(column.getIsSorted() === "asc")
           }}
           className="text-foreground hover:bg-input hover:border-primary"
