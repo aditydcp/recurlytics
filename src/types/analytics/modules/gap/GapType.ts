@@ -13,3 +13,8 @@ export interface GapAnalyticsResult {
   lastGaps: Gap[];
   nextPrediction: Date | null;
 }
+
+export interface PredictionDate {
+  date: Date;
+  probability: number;
+}

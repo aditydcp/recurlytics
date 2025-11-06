@@ -18,7 +18,6 @@ export default function EventAnalyticsComponent() {
   const analyticsResults = useMemo(() => {
     if (!events || events.length < 2) return null;
     const results = runAnalytics(currentTemplate.id, events)
-    console.log(results)
     return results;
   }, [currentTemplate.id, events]);
 
@@ -26,13 +25,13 @@ export default function EventAnalyticsComponent() {
 
   return (
     <div className="w-full flex flex-col py-2">
-      <div className="w-full flex flex-col mb-3 mx-4">
+      <div className="flex flex-col mb-3 mx-3 md:mx-4">
         <div className="flex flex-row items-center justify-between">
           <Label className="text-xl font-semibold">Event Analytics</Label>
           <Separator orientation="horizontal" className="flex-1 hidden md:block mx-6" />
           <Label className="text-xl font-normal text-muted-foreground text-right">{currentTemplate.name}</Label>
         </div>
-        <Label className="text-md font-normal text-muted-foreground">Today: {formatCompleteDate(new Date())}</Label>
+        <Label className="text-md font-normal text-muted-foreground">{formatCompleteDate(new Date())}</Label>
       </div>
       {loading ? (
         <p className="mx-6 my-4 text-sm text-muted-foreground">

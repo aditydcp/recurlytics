@@ -3,18 +3,20 @@ import { EventTable } from "@/components/feature/unit/table/EventTableDefinition
 import type { Event } from "@/types/EventType";
 import DataNumberDisplay from "@/components/feature/unit/DataNumberDisplay";
 import DataMultiPointDisplay from "@/components/feature/unit/DataMultiPointDisplay";
-import type { DataPoint } from "@/types/DataDisplayType";
+import type { DataPoint, DataProbabilityPoint } from "@/types/DataDisplayType";
 import { format } from "date-fns";
 import { CalendarMultiRangeReadOnly, CalendarRangeReadOnly } from "@/components/common/CalendarReadOnly";
 import type { CycleDetail, PeriodAnalyticsResult, PhaseRange } from "@/types/analytics/modules/period/PeriodType";
 import { capitalizeWords } from "@/lib/ui/string";
 import { getPhaseIcon } from "@/lib/analytics/helpers/icons";
-import { Calendar } from "lucide-react";
+import { Calendar, Info } from "lucide-react";
 import { DataDetailContent, DataDetailDecorator, DataDetailDisplay, DataDetailHeader, DataDetailTitle, intersperseWithSeparator } from "@/components/common/DataDetailDisplay";
 import { DateRangeLabel } from "@/components/common/DateRangeLabel";
 import { cn } from "@/lib/ui/utils";
 import { CardTooltip, CardTooltipContent, CardTooltipTrigger } from "@/components/common/CardTooltip";
 import { DataMultiPointSwitchDisplay } from "@/components/feature/unit/DataMultiPointSwitchDisplay";
+import { ProbabilityDistributionBubblesComponent } from "../unit/ProbabilityDistributionBubblesComponent";
+import { Label } from "@/components/ui/label";
 
 export const PeriodTrackingView = ({
   events,
@@ -28,10 +30,12 @@ export const PeriodTrackingView = ({
     avgCycleLength,
     lastCycles,
     nextPrediction,
-    // predictionRange,
+    predictionRange,
     currentCycle,
     currentPhase,
   }: PeriodAnalyticsResult = analyticsResults.period;
+
+  console.log(predictionRange)
 
   const lastCyclesSlice = lastCycles.slice(0, 3)
 
@@ -47,7 +51,35 @@ export const PeriodTrackingView = ({
             {/* Header */}
             <div className="flex flex-wrap md:flex-nowrap gap-y-2">
               <div className="flex flex-col gap-1 items-start w-full">
-                <div className="text-sm text-muted-foreground">Predicted Next Period</div>
+                <div className="flex items-center space-x-1 md:space-x-3 text-muted-foreground">
+                  <Label className="text-sm">Predicted Next Period</Label>
+                  <CardTooltip popupTitle={"Next Period Prediction"}>
+                    <CardTooltipTrigger>
+                      <Info
+                        className={"w-4 h-4 hover:text-primary hover:bg-accent cursor-pointer"}
+                      />
+                    </CardTooltipTrigger>
+                    <CardTooltipContent>
+                      <div className="flex flex-col gap-2 max-w-sm">
+                        <Label>
+                          The next period date is a probability distribution among these dates,
+                          with the highest probability falls on {format(nextPrediction!, "EEE, MMM d")}.
+                        </Label>
+                        <ProbabilityDistributionBubblesComponent
+                          predictionRange={predictionRange.map(pr => {
+                            return {
+                              label: format(pr.date, "MMM dd"),
+                              probability: pr.probability
+                            } as DataProbabilityPoint
+                          })}
+                          labelMode="label"
+                          maxTextSize={14}
+                          minTextSize={8}
+                        />
+                      </div>
+                    </CardTooltipContent>
+                  </CardTooltip>
+                </div>
                 <div className="text-3xl font-semibold">
                   {format(nextPrediction!, "EEE, MMM d")}
                 </div>

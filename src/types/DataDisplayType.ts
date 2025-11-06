@@ -52,3 +52,8 @@ export interface DataMultiPointDisplayProps {
   ) => React.ReactNode;
   className?: string;
 }
+
+export interface DataProbabilityPoint {
+  label: string;
+  probability: number;
+}
