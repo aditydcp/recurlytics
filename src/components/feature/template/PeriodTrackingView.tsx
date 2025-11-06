@@ -60,10 +60,10 @@ export const PeriodTrackingView = ({
                       />
                     </CardTooltipTrigger>
                     <CardTooltipContent>
-                      <div className="flex flex-col gap-2 max-w-sm">
+                      <div className="flex flex-col gap-1 max-w-xs p-1">
                         <Label>
                           The next period date is a probability distribution among these dates,
-                          with the highest probability falls on {format(nextPrediction!, "EEE, MMM d")}.
+                          with the highest probability falls on <span className="text-primary">{format(nextPrediction!, "EEE, MMM d")}</span>.
                         </Label>
                         <ProbabilityDistributionBubblesComponent
                           predictionRange={predictionRange.map(pr => {
@@ -73,6 +73,8 @@ export const PeriodTrackingView = ({
                             } as DataProbabilityPoint
                           })}
                           labelMode="label"
+                          maxBubbleSize={82}
+                          minBubbleSize={48}
                           maxTextSize={14}
                           minTextSize={8}
                         />
