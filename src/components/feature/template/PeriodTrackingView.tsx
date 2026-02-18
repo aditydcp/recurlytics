@@ -33,9 +33,14 @@ export const PeriodTrackingView = ({
     predictionRange,
     currentCycle,
     currentPhase,
+    currentDayNumber,
+    latePeriodDetails
   }: PeriodAnalyticsResult = analyticsResults.period;
 
   const lastCyclesSlice = lastCycles.slice(0, 3)
+  const isLate = latePeriodDetails?.isLate ?? false;
+  const predictedLength = currentCycle?.gap;
+  const actualLength = currentDayNumber;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
@@ -50,8 +55,8 @@ export const PeriodTrackingView = ({
             <div className="flex flex-wrap md:flex-nowrap gap-y-2">
               <div className="flex flex-col gap-1 items-start w-full">
                 <div className="flex items-center space-x-1 md:space-x-3 text-muted-foreground">
-                  <Label className="text-sm">Predicted Next Period</Label>
-                  <CardTooltip popupTitle={"Next Period Prediction"}>
+                  <Label className="text-sm">Period Date Prediction</Label>
+                  <CardTooltip popupTitle={"Prediction of the period of this cycle"}>
                     <CardTooltipTrigger>
                       <Info
                         className={"w-4 h-4 hover:text-primary hover:bg-accent cursor-pointer"}
@@ -60,7 +65,7 @@ export const PeriodTrackingView = ({
                     <CardTooltipContent>
                       <div className="flex flex-col gap-1 max-w-xs p-1">
                         <Label>
-                          The next period date is a probability distribution among these dates,
+                          The period date is a probability distribution among these dates,
                           with the highest probability falls on <span className="text-primary">{format(nextPrediction!, "EEE, MMM d")}</span>.
                         </Label>
                         <ProbabilityDistributionBubblesComponent
@@ -84,18 +89,81 @@ export const PeriodTrackingView = ({
                   {format(nextPrediction!, "EEE, MMM d")}
                 </div>
               </div>
+
               <div className="flex flex-col gap-1 items-start w-full">
-                <div className="text-sm text-muted-foreground">Predicted Cycle Length</div>
-                <div className="text-3xl font-semibold">
-                  {currentCycle?.gap} days
-                </div>
+                {isLate ? (
+                  <>
+                    <div className="flex items-center space-x-1 md:space-x-3 text-muted-foreground">
+                      {/* Primary when late */}
+                      <Label className="text-sm">Current Cycle Length</Label>
+                      <CardTooltip popupTitle={"The length of the current cycle"}>
+                        <CardTooltipTrigger>
+                          <Info
+                            className={"w-4 h-4 hover:text-primary hover:bg-accent cursor-pointer"}
+                          />
+                        </CardTooltipTrigger>
+                        <CardTooltipContent>
+                          <div className="flex flex-col gap-1 max-w-xs p-1">
+                            <Label>
+                              This is the current length of this cycle.
+                              <br />
+                              Calculated from the start of this cycle to this day.
+                              <br />
+                              The predicted cycle length is <span className="font-semibold">{predictedLength} days</span>.
+                            </Label>
+                          </div>
+                        </CardTooltipContent>
+                      </CardTooltip>
+                    </div>
+
+                    <div className="font-semibold">
+                      <span className="text-3xl text-amber-400">
+                        {actualLength} days
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Normal state */}
+                    <div className="text-sm text-muted-foreground">
+                      Predicted Cycle Length
+                    </div>
+                    <div className="text-3xl font-semibold">
+                      {predictedLength} days
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
-            <div className="text-base">
-              <span className="text-muted-foreground">You’re currently in:</span>{" "}
-              <span className="font-semibold text-primary-foreground">{getPhaseIcon(currentPhase?.phase)} {capitalizeWords(currentPhase?.phase)} phase</span>
+            <div className="text-base flex flex-col gap-1">
+              <div>
+                <span className="text-muted-foreground">You’re on</span>{" "}
+                <span className="font-semibold text-primary-foreground">
+                  Day {currentDayNumber}
+                </span>
+
+                {isLate && (
+                  <>
+                    {" • "}
+                    <span className="font-semibold text-amber-400">
+                      {latePeriodDetails!.daysLate} day
+                      {latePeriodDetails!.daysLate > 1 ? "s" : ""} late
+                    </span>
+                  </>
+                )}
+              </div>
+
+              <div>
+                <span className={`font-semibold ${isLate ? "text-gray-400" : "text-primary-foreground"}`}>
+                  {isLate ?
+                    `${getPhaseIcon("extended")} Extended Luteal` :
+                    getPhaseIcon(currentPhase?.phase)}{" "}{capitalizeWords(currentPhase?.phase)}
+                  {" "}phase
+                </span>
+              </div>
             </div>
+
             {/* Calendar below */}
             <CalendarMultiRangeReadOnly
               defaultValue={currentCycle?.phases.map((phase: PhaseRange) => ({

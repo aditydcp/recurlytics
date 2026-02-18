@@ -108,3 +108,19 @@ export function computeGapStats(gaps: Gap[]): GapStat[] {
 
   return stats;
 }
+
+/**
+ * Get the current day number in respect to the gap
+ */
+export function getCurrentDayNumber(startDate: Date) {
+  const normalize = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  const today = normalize(new Date());
+  const start = normalize(startDate);
+
+  const diffInDays = Math.floor(
+    (today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  return diffInDays + 1;
+}
