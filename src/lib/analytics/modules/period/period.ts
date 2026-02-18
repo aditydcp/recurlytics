@@ -11,7 +11,7 @@ import {
 import { extractPhasesFromCycle } from "./helper/phaseExtract";
 import { predictCycleLength, predictPeriodRange } from "./helper/predict";
 import type { AnalyticsModule } from "@/types/analytics/AnalyticsType";
-import { computeGapStats, extractEventMetadata } from "@/lib/analytics/helpers/gaps";
+import { computeGapStats, extractEventMetadata, getCurrentDayNumber } from "@/lib/analytics/helpers/gaps";
 
 export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
   id: "period",
@@ -26,6 +26,8 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
         predictionRange: [],
         currentCycle: null,
         currentPhase: null,
+        currentDayNumber: 0,
+        latePeriodDetails: null
       };
     }
 
@@ -101,6 +103,16 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
       ),
     };
 
+    // get current day number
+    const currentDayNumber = getCurrentDayNumber(lastPeriodDate);
+
+    // get late period details
+    const latePeriodDetails = {
+      isLate: new Date() > nextPrediction,
+      daysLate: differenceInDays(new Date(), nextPrediction),
+    };
+    
+
     return {
       cycleLengthStats,
       avgCycleLength,
@@ -109,6 +121,8 @@ export const periodModule: AnalyticsModule<PeriodAnalyticsResult> = {
       predictionRange,
       currentCycle: currentCycleDetail,
       currentPhase,
+      currentDayNumber,
+      latePeriodDetails,
     };
   },
 };

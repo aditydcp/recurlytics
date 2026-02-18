@@ -8,6 +8,8 @@ export const getPhaseIcon = (phase?: string) => {
       return "💧"
     case "luteal":
       return "🌕"
+    case "extended":
+      return "🌑"
     default:
       return ""
   }

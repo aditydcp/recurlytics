@@ -10,3 +10,9 @@ export const capitalizeWords = (str?: string) => {
     .toLowerCase()
     .replace(/\b\w/g, (char) => char.toUpperCase()) : "";
 }
+
+export const getOrdinalNumber = (number: number) => {
+  const string = ["th", "st", "nd", "rd"];
+  const value = number % 100;
+  return number + (string[(value - 20) % 10] || string[value] || string[0]);
+}

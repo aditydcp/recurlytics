@@ -59,7 +59,7 @@ export function PopupCard({
 
         {/* header */}
         <header className="flex flex-col px-4 pb-2 shrink-0">
-          <h5 id={`popup-${popup.id}-title`} className="text-lg font-semibold">
+          <h5 id={`popup-${popup.id}-title`} className="text-lg font-semibold mr-4">
             {popup.title}
           </h5>
           <Label className="text-sm text-muted-foreground">
