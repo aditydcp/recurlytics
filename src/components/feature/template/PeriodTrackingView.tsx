@@ -245,7 +245,7 @@ export const PeriodTrackingView = ({
                     <CardTooltipContent>
                       <DataDetailDisplay>
                         <DataDetailHeader>
-                          <DataDetailDecorator className="text-sm font-normal text-muted-foreground">
+                          <DataDetailDecorator className="text-sm font-normal text-muted-foreground items-center">
                             {intersperseWithSeparator(items)}
                           </DataDetailDecorator>
                           <DataDetailTitle>
