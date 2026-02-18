@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.0](https://github.com/aditydcp/recurlytics/compare/v2.1.0...v2.2.0) (2026-02-18)
+
+
+### Features
+
+* handle late period ([dd7d8a1](https://github.com/aditydcp/recurlytics/commit/dd7d8a1a660d79a6f46abbef251602f0c5aebfaf))
+
+
+### Bug Fixes
+
+* fix workflow branch ([2a30400](https://github.com/aditydcp/recurlytics/commit/2a30400ff8a784ad7b460e195daae491df112468))
+* update popup view ([07c11ef](https://github.com/aditydcp/recurlytics/commit/07c11ef6316724201e45a65637af2b7e2992dbbb))
+
 ## [2.1.0](https://github.com/aditydcp/recurlytics/compare/v2.0.1...v2.1.0) (2025-11-06)
 
 
