@@ -2,10 +2,12 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Preferences } from "@/types/PreferenceType";
 import { ThemeModeProvider } from "@/contexts/preferences/ThemeModeContext";
 import { TemplateProvider } from "@/contexts/preferences/TemplateContext";
+import { AutoRefreshProvider } from "@/contexts/preferences/AutoRefreshContext";
 
 const defaultPreferences: Preferences = {
   themeMode: "system",
   defaultTemplate: "default",
+  autoRefresh: "weekly-monday",
 };
 
 type PreferencesContextType = {
@@ -33,7 +35,9 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
     <PreferencesContext.Provider value={{ preferences, setPreferences }}>
       <TemplateProvider>
         <ThemeModeProvider>
-          {children}
+          <AutoRefreshProvider>
+            {children}
+          </AutoRefreshProvider>
         </ThemeModeProvider>
       </TemplateProvider>
     </PreferencesContext.Provider>
