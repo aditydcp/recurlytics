@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.0](https://github.com/aditydcp/recurlytics/compare/v2.2.0...v2.3.0) (2026-02-19)
+
+
+### Features
+
+* auto refresh events ([a961751](https://github.com/aditydcp/recurlytics/commit/a961751378ec2b9e677f9208d55cb5b384a6b511))
+* refresh button ([a9a8c5e](https://github.com/aditydcp/recurlytics/commit/a9a8c5e85645591eef615edd88154cb49c2f1234))
+
 ## [2.2.0](https://github.com/aditydcp/recurlytics/compare/v2.1.0...v2.2.0) (2026-02-18)
 
 
