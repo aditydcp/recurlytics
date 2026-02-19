@@ -15,18 +15,18 @@ function App() {
   return (
     <TooltipProvider>
       <PreferencesProvider>
-        <PopupProvider>
-          <GoogleAuthProvider>
-            <GoogleCalendarProvider>
+        <GoogleAuthProvider>
+          <GoogleCalendarProvider>
+            <PopupProvider>
               <div className="min-h-screen bg-background text-foreground px-8 flex flex-col items-center justify-center">
                 <AppContent />
                 <footer className="my-8 text-sm text-muted-foreground">
                   Built with ❤️ using React, TypeScript & shadcn/ui
                 </footer>
               </div>
-            </GoogleCalendarProvider>
-          </GoogleAuthProvider>
-        </PopupProvider>
+            </PopupProvider>
+          </GoogleCalendarProvider>
+        </GoogleAuthProvider>
       </PreferencesProvider>
     </TooltipProvider>
   );
