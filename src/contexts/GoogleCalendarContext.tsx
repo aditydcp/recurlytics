@@ -16,6 +16,8 @@ type GoogleCalendarContextType = {
   selectedCalendar: string | null;
   events: Event[];
   loading: boolean;
+  fetchCalendars: () => Promise<void>;
+  fetchEvents: () => Promise<void>;
   selectCalendarAndFetch: (calendarId: string) => Promise<void>;
 };
 
@@ -47,6 +49,10 @@ export const GoogleCalendarProvider: React.FC<{ children: React.ReactNode }> = (
 
   // fetch calendars when token changes
   useEffect(() => {
+    fetchCalendars();
+  }, [token]);
+
+  const fetchCalendars = async () => {
     if (!token) return;
     setLoading(true);
     listCalendars(token)
@@ -96,6 +102,27 @@ export const GoogleCalendarProvider: React.FC<{ children: React.ReactNode }> = (
     }
   };
 
+  /**
+   * Fetch events using the currently selected calendar
+   */
+  const fetchEvents = async () => {
+    if (!token || !selectedCalendar) return;
+    try {
+      setLoading(true);
+      const evts = await listEventsFromCalendar(token, selectedCalendar);
+      const newCache = {
+        iat: Date.now(),
+        data: evts
+      };
+      setEventsCache(newCache);
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(newCache));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <GoogleCalendarContext.Provider
       value={{
@@ -103,6 +130,8 @@ export const GoogleCalendarProvider: React.FC<{ children: React.ReactNode }> = (
         selectedCalendar,
         events: eventsCache.data,
         loading,
+        fetchCalendars,
+        fetchEvents,
         selectCalendarAndFetch,
       }}
     >

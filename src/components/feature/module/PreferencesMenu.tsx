@@ -1,12 +1,19 @@
 import LabelWithTooltipComponent from "@/components/common/LabelWithTooltipComponent";
+import { LoadingButton } from "@/components/common/LoadingButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useGoogleCalendar } from "@/contexts/GoogleCalendarContext";
 import { usePreferences } from "@/contexts/preferences/PreferencesContext";
 import { templateDefinitions } from "@/lib/templates/definitions";
 import type { AutoRefreshMode, ThemeMode } from "@/types/PreferenceType";
 
 export function PreferencesMenu({ }) {
   const { preferences, setPreferences } = usePreferences();
+  const {
+    loading,
+    fetchCalendars,
+    fetchEvents,
+  } = useGoogleCalendar();
 
   return (
     <Card>
@@ -57,6 +64,34 @@ export function PreferencesMenu({ }) {
               })}
             </SelectContent>
           </Select>
+        </div>
+        <div className="flex flex-col md:flex-row items-start gap-y-2 md:items-center justify-between space-x-4">
+          <LabelWithTooltipComponent
+            label={"Refresh Calendars"}
+            tooltip={"Refresh the list of calendars."}
+          />
+          <LoadingButton
+            variant={"outline"}
+            loading={loading}
+            loadingPosition="start"
+            onClick={() => { fetchCalendars() }}
+          >
+            Refresh
+          </LoadingButton>
+        </div>
+        <div className="flex flex-col md:flex-row items-start gap-y-2 md:items-center justify-between space-x-4">
+          <LabelWithTooltipComponent
+            label={"Refresh Events"}
+            tooltip={"Refresh the list of events on this calendar."}
+          />
+          <LoadingButton
+            variant={"outline"}
+            loading={loading}
+            loadingPosition="start"
+            onClick={() => { fetchEvents() }}
+          >
+            Refresh
+          </LoadingButton>
         </div>
         <div className="flex flex-col md:flex-row items-start gap-y-2 md:items-center justify-between space-x-4">
           <LabelWithTooltipComponent

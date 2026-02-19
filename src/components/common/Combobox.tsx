@@ -12,6 +12,7 @@ interface ComboboxProps {
   searchText?: string;
   emptyText?: string;
   loading?: boolean;
+  showLoading?: boolean;
   defaultValue?: string;
   onValueSet?: (value: string) => void;
 }
@@ -22,6 +23,7 @@ export default function Combobox({
   searchText = "Type to search...",
   emptyText = "No option found.",
   loading = false,
+  showLoading = true,
   defaultValue = "",
   onValueSet,
 }: ComboboxProps) {
@@ -76,7 +78,7 @@ export default function Combobox({
           </Command>
         </PopoverContent>
       </Popover>
-      {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+      {(loading && showLoading) && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
     </div>
   )
 }
