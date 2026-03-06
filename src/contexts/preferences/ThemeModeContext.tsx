@@ -31,6 +31,12 @@ export const ThemeModeProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.toggle("dark", themeMode === "dark");
+
+    // Update theme-color meta tag
+    const metaThemeColor = document.querySelector("meta[name='theme-color']");
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute("content", themeMode === "dark" ? "#000000" : "#ffffff");
+    }
   }, [themeMode]);
 
   // Watch system thememode only if user chose "system"
