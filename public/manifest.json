@@ -1,6 +1,7 @@
 {
   "name": "Recurlytics",
   "short_name": "Recurlytics",
+  "description": "Google Calendar recurring events analytics",
   "icons": [
     {
       "src": "/favicon/android-chrome-192x192.png",
